@@ -45,24 +45,24 @@ public class Ball {
 
         int key = e.getKeyCode();
 
-        if (key == KeyEvent.VK_LEFT) {
+        if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
             dx = -1;
-            System.out.println("Left pressed.");
+            System.out.println("Left or A pressed.");
         }
 
-        if (key == KeyEvent.VK_RIGHT) {
+        if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
             dx = 1;
-            System.out.println("Right pressed.");
+            System.out.println("Right or D pressed.");
         }
 
-        if (key == KeyEvent.VK_UP) {
+        if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) {
             dy = -1;
-            System.out.println("Up pressed.");
+            System.out.println("Up or W pressed.");
         }
 
-        if (key == KeyEvent.VK_DOWN) {
+        if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
             dy = 1;
-            System.out.println("Down pressed.");
+            System.out.println("Down or S pressed.");
         }
         if (key == KeyEvent.VK_ESCAPE) {
             System.out.println("Esc pressed.");
@@ -74,19 +74,19 @@ public class Ball {
 
         int key = e.getKeyCode();
 
-        if (key == KeyEvent.VK_LEFT) {
+        if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
             dx = 0;
         }
 
-        if (key == KeyEvent.VK_RIGHT) {
+        if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
             dx = 0;
         }
 
-        if (key == KeyEvent.VK_UP) {
+        if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) {
             dy = 0;
         }
 
-        if (key == KeyEvent.VK_DOWN) {
+        if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
             dy = 0;
         }
     }
