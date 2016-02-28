@@ -37,13 +37,13 @@ public class Amazeing extends JFrame {
         menubar.add(file);
         menubar.add(help);
         setJMenuBar(menubar);
-        /* Testataa vertikaalista baria oikealla. */
+        /* Testataa vertikaalista JToolBaria oikealla. */
         JToolBar vertical = new JToolBar(JToolBar.VERTICAL);
         vertical.setFloatable(false);
         vertical.setMargin(new Insets(10, 70, 5, 70));
         add(vertical, BorderLayout.EAST);
-        /* Testataa statusbaria alhaalla. */
-        JLabel statusbar = new JLabel(" Statusbar");
+        /* Testataa JLabelia alhaalla. */
+        JLabel statusbar = new JLabel();
         statusbar.setPreferredSize(new Dimension(-1, 130));
         statusbar.setBorder(LineBorder.createGrayLineBorder());
         add(statusbar, BorderLayout.SOUTH);
