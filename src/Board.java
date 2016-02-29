@@ -1,3 +1,5 @@
+
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -36,7 +38,9 @@ public class Board extends JPanel implements ActionListener {
         timer.start();
 
     }
-
+    public Map getMap() {
+        return map;
+    }
     //Painting components.
     @Override
     public void paintComponent(Graphics g) {
@@ -50,7 +54,7 @@ public class Board extends JPanel implements ActionListener {
     private void drawBall(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g;
-        g2d.drawImage(ball.getImage(), ball.getX(), ball.getY(), this);
+        g2d.drawImage(ball.getImage(), ball.getX() * 25, ball.getY() * 25, this);
     }
     private void drawMap(Graphics g) {
 
@@ -69,7 +73,6 @@ public class Board extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ball.move();
         repaint();
     }
 

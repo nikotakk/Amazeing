@@ -6,10 +6,8 @@ import javax.swing.ImageIcon;
  */
 public class Ball {
 
-    private int dx;
-    private int dy;
-    private int x;
-    private int y;
+    private int tileX;
+    private int tileY;
     private Image image;
 
     public Ball() {
@@ -21,22 +19,22 @@ public class Ball {
 
         ImageIcon ii = new ImageIcon("src/resources/ball.png");
         image = ii.getImage();
-        x = 40;
-        y = 60;
+        tileX = 1;
+        tileY = 1;
     }
 
     // Move the ball.
-    public void move() {
-        x += dx;
-        y += dy;
+    private void move(int dx, int dy ) {
+        tileX += dx;
+        tileY += dy;
     }
 
     public int getX() {
-        return x;
+        return tileX;
     }
 
     public int getY() {
-        return y;
+        return tileY;
     }
 
     public Image getImage() {
@@ -48,22 +46,22 @@ public class Ball {
         int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
-            dx = -1;
+            move(-1, 0);
             System.out.println("Left or A pressed.");
         }
 
         if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
-            dx = 1;
+            move(1, 0);
             System.out.println("Right or D pressed.");
         }
 
         if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) {
-            dy = -1;
+            move(0, -1);
             System.out.println("Up or W pressed.");
         }
 
         if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
-            dy = 1;
+            move(0, 1);
             System.out.println("Down or S pressed.");
         }
         if (key == KeyEvent.VK_ESCAPE) {
@@ -77,19 +75,19 @@ public class Ball {
         int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
-            dx = 0;
+            tileX = getX();
         }
 
         if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
-            dx = 0;
+            tileX = getX();
         }
 
         if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) {
-            dy = 0;
+            tileY = getY();
         }
 
         if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
-            dy = 0;
+            tileY = getY();
         }
     }
 }

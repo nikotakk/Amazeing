@@ -10,6 +10,10 @@ import java.awt.event.KeyEvent;
 
 public class Amazeing extends JFrame {
 
+    private int infobarWidth = 130;
+    private int movebarHeight = 130;
+    private int mazeSize = 25*16;
+
     public Amazeing() {
 
         initUI();
@@ -42,17 +46,17 @@ public class Amazeing extends JFrame {
         /* Testataa vertikaalista JToolBaria oikealla. */
         JToolBar vertical = new JToolBar(JToolBar.VERTICAL);
         vertical.setFloatable(false);
-        vertical.setMargin(new Insets(10, 70, 5, 70));
+        vertical.setMargin(new Insets(0, infobarWidth/2, 0, infobarWidth/2));
         add(vertical, BorderLayout.EAST);
         /* Testataa JLabelia alhaalla. */
         JLabel statusbar = new JLabel();
-        statusbar.setPreferredSize(new Dimension(-1, 130));
-        statusbar.setBorder(LineBorder.createGrayLineBorder());
+        statusbar.setPreferredSize(new Dimension(-1, movebarHeight));
+        /* statusbar.setBorder(LineBorder.createGrayLineBorder()); */
         add(statusbar, BorderLayout.SOUTH);
         /* Lisätään Board keskelle näyttöä. */
         add(new Board(), BorderLayout.CENTER);
 
-        setSize(740, 600);
+        setSize(mazeSize+infobarWidth+4, mazeSize+movebarHeight+21);
         setResizable(false);
         setTitle("Amazeing");
         //setBackground(Color.lightGray);
