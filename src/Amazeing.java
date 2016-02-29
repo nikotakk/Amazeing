@@ -1,5 +1,5 @@
+
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -53,7 +53,7 @@ public class Amazeing extends JFrame {
         statusbar.setPreferredSize(new Dimension(-1, movebarHeight));
         /* statusbar.setBorder(LineBorder.createGrayLineBorder()); */
         add(statusbar, BorderLayout.SOUTH);
-        /* Lisätään Board keskelle näyttöä. */
+
         add(new Board(), BorderLayout.CENTER);
 
         setSize(mazeSize+infobarWidth+4, mazeSize+movebarHeight+21);
