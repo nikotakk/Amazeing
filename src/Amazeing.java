@@ -4,7 +4,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
+/**
+ * Created by nigel on 2/26/16.
+ */
 
 public class Amazeing extends JFrame {
 

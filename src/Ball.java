@@ -1,7 +1,9 @@
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
-
+/**
+ * Created by nigel on 2/26/16.
+ */
 public class Ball {
 
     private int dx;
