@@ -1,2 +1,2 @@
-# Funnythings
-Repository for fun things.
+# Maze
+Repository for a maze game.
