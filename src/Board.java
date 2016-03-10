@@ -54,6 +54,7 @@ public class Board extends JPanel implements ActionListener {
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(ball.getImage(), ball.getX() * 25, ball.getY() * 25, this);
     }
+    // Drawing the maps graphics.
     private void drawMap(Graphics g) {
 
         for (int y = 0; y < 16; y++) {
@@ -68,7 +69,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-
+    //Moving and collision checks.
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
