@@ -19,10 +19,14 @@ public class Board extends JPanel implements ActionListener {
     private Ball ball;
     private final int DELAY = 10;
     private boolean inGame = false;
+    private boolean paused = false;
     private int blockSize = 25;
-    private int screenSize = blockSize*16;
     private Image instructions;
+    private Image pause;
 
+    public void print(String whatYouWant) {
+        System.out.println(whatYouWant);
+    }
 
     public Board() {
 
@@ -34,8 +38,9 @@ public class Board extends JPanel implements ActionListener {
         addKeyListener(new TAdapter());
         setFocusable(true);
         setBackground(Color.BLACK);
-        inGame = false;
 
+        inGame = false;
+        paused = false;
         map = new Map();
         ball = new Ball();
         timer = new Timer(DELAY, this);
@@ -43,28 +48,43 @@ public class Board extends JPanel implements ActionListener {
 
     }
 
-
-
     // Painting components.
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (!inGame) {
-            showIntroScreen(g);
-        }
-        else {
+        if (inGame) {
+
             drawMap(g);
+            print("Drawing map");
             drawBall(g);
+            print("Drawing ball");
 
             Toolkit.getDefaultToolkit().sync();
+            if (paused) {
+                showScreen(g, paused);
+            }
+        }
+        else {
+            showScreen(g, paused);
         }
     }
 
-    // Drawing instructions screen.
-    private void showIntroScreen(Graphics g) {
+    // Drawing instructions or pause screen.
+    private void showScreen(Graphics g, boolean paused) {
         ImageIcon ii = new ImageIcon("src/resources/instructions.png");
+        ImageIcon imageIcon = new ImageIcon("src/resources/pause.png");
+        pause = imageIcon.getImage();
         instructions = ii.getImage();
-        g.drawImage(instructions,1,1,this);
+
+        if (paused) {
+            g.drawImage(pause,0,100,this);
+            timer.stop();
+            print("Drawing 'Paused'");
+        } else {
+            g.drawImage(instructions,1,1,this);
+            print("Drawing instructions");
+        }
+
     }
 
     // Drawing the balls graphics.
@@ -88,12 +108,12 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    //Moving and collision checks.
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
     }
 
+    //Moving and collision checks.
     private class TAdapter extends KeyAdapter {
 
         public void keyPressed(KeyEvent e) {
@@ -101,28 +121,28 @@ public class Board extends JPanel implements ActionListener {
             int key = e.getKeyCode();
 
             if (inGame) {
-                if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
+                if ( (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) && timer.isRunning() ) {
                     if (!map.getMap(ball.getX() - 1, ball.getY()).equals("w")) {
                         ball.move(-1, 0);
                     }
                     System.out.println("Left or A pressed.");
                 }
 
-                if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
+                if ( (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) && timer.isRunning() ) {
                     if (!map.getMap(ball.getX() + 1, ball.getY()).equals("w")) {
                         ball.move(1, 0);
                     }
                     System.out.println("Right or D pressed.");
                 }
 
-                if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) {
+                if ( (key == KeyEvent.VK_UP || key == KeyEvent.VK_W ) && timer.isRunning() ) {
                     if (!map.getMap(ball.getX(), ball.getY() - 1).equals("w")) {
                         ball.move(0, -1);
                     }
                     System.out.println("Up or W pressed.");
                 }
 
-                if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
+                if ( (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) && timer.isRunning() ) {
                     if (!map.getMap(ball.getX(), ball.getY() + 1).equals("w")) {
                         ball.move(0, 1);
                     }
@@ -131,9 +151,12 @@ public class Board extends JPanel implements ActionListener {
                 if (key == KeyEvent.VK_ESCAPE) {
                     System.out.println("Esc pressed.");
                     if (timer.isRunning()) {
-                        timer.stop();
+                        paused = true;
+                        print("Setting 'paused' to True");
                     } else {
                         timer.start();
+                        paused = false;
+                        print("Setting 'paused' to False");
                     }
 //                System.exit(1);
                 }
@@ -141,13 +164,12 @@ public class Board extends JPanel implements ActionListener {
                 if (key == KeyEvent.VK_G) {
                     inGame = true;
                     System.out.println("G pressed");
-                    //initGame();
                 }
             }
 
         }
 
-        public void keyReleased(KeyEvent e) {
+    /*    public void keyReleased(KeyEvent e) {
 
             int key = e.getKeyCode();
 
@@ -158,6 +180,6 @@ public class Board extends JPanel implements ActionListener {
                 ball.move(0,0);
             }
 
-        }
+        }*/
     }
 }
