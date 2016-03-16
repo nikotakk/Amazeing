@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.font.GraphicAttribute;
 import javax.swing.*;
 
 /**
@@ -23,6 +22,7 @@ public class Board extends JPanel implements ActionListener {
     private int blockSize = 25;
     private Image instructions;
     private Image pause;
+
 
     public void print(String whatYouWant) {
         System.out.println(whatYouWant);
@@ -53,7 +53,6 @@ public class Board extends JPanel implements ActionListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (inGame) {
-
             drawMap(g);
             print("Drawing map");
             drawBall(g);
@@ -61,7 +60,7 @@ public class Board extends JPanel implements ActionListener {
 
             Toolkit.getDefaultToolkit().sync();
             if (paused) {
-                showScreen(g, paused);
+                showScreen(g, true);
             }
         }
         else {
@@ -113,7 +112,7 @@ public class Board extends JPanel implements ActionListener {
         repaint();
     }
 
-    //Moving and collision checks.
+    //Using keyboard, moving and collision checks.
     private class TAdapter extends KeyAdapter {
 
         public void keyPressed(KeyEvent e) {

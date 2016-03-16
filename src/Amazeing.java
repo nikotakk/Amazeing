@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
 /**
  * Created by nigel on 2/26/16.
  */
@@ -15,20 +16,22 @@ public class Amazeing extends JFrame {
     private int mazeSize = 25*16;
 
 
+
     public Amazeing() {
 
         initUI();
     }
     // Initializing the UI.
     private void initUI() {
-        /* Creating a menubar, to which menus are added.. */
+
+        /* Creating a menubar, to which menus are added. */
         JMenuBar menubar = new JMenuBar();
         JMenu file = new JMenu("File");
         JMenu help = new JMenu("Help");
         file.setMnemonic(KeyEvent.VK_F);
         help.setMnemonic(KeyEvent.VK_H);
 
-        /*Creating Exit menuItem and inserting it into menubar. */
+        /*Creating Exit menuItem. */
         JMenuItem menuExit= new JMenuItem("Exit");
         menuExit.setMnemonic(KeyEvent.VK_E);
         menuExit.setToolTipText("Exit application");
@@ -40,7 +43,31 @@ public class Amazeing extends JFrame {
             }
         });
 
+        /*Creating Reset menuItem. */
+        JMenuItem menuReset = new JMenuItem("Reset the level");
+        menuReset.setMnemonic(KeyEvent.VK_R);
+        menuReset.setToolTipText("Reset the ongoing level");
+        menuReset.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+// TODO: reset the map.
+            }
+        });
+
+                /*Creating Exit menuItem. */
+        JMenuItem menuInstructions = new JMenuItem("Show instructions");
+        menuExit.setMnemonic(KeyEvent.VK_I);
+        menuExit.setToolTipText("Show the instructions to play the game");
+        menuExit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+// TODO: show instructions.
+            }
+        });
+
         file.add(menuExit);
+        file.add(menuReset);
+        help.add(menuInstructions);
         menubar.add(file);
         menubar.add(help);
         setJMenuBar(menubar);
