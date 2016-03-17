@@ -16,12 +16,14 @@ public class Board extends JPanel implements ActionListener {
     private Timer timer;
     private Map map;
     private Ball ball;
+    private Stopwatch watch;
     private final int DELAY = 10;
     private boolean inGame = false;
     private boolean paused = false;
     private int blockSize = 25;
     private Image instructions;
     private Image pause;
+
 
 
     public void print(String whatYouWant) {
@@ -39,15 +41,24 @@ public class Board extends JPanel implements ActionListener {
         setFocusable(true);
         setBackground(Color.BLACK);
 
+        initVariables();
+    }
+    /* Initializing the variables. */
+    private void initVariables() {
+
         inGame = false;
         paused = false;
         map = new Map();
         ball = new Ball();
         timer = new Timer(DELAY, this);
         timer.start();
-
+        watch = new Stopwatch();
+        watch.start();
     }
 
+    public long getTime() {
+        return watch.getTimeSeconds();
+    }
     // Painting components.
     @Override
     public void paintComponent(Graphics g) {
@@ -70,10 +81,10 @@ public class Board extends JPanel implements ActionListener {
 
     // Drawing instructions or pause screen.
     private void showScreen(Graphics g, boolean paused) {
-        ImageIcon ii = new ImageIcon("src/resources/instructions.png");
-        ImageIcon imageIcon = new ImageIcon("src/resources/pause.png");
-        pause = imageIcon.getImage();
-        instructions = ii.getImage();
+        ImageIcon instr = new ImageIcon("src/resources/instructions.png");
+        ImageIcon ps = new ImageIcon("src/resources/pause.png");
+        pause = ps.getImage();
+        instructions = instr.getImage();
 
         if (paused) {
             g.drawImage(pause,0,100,this);

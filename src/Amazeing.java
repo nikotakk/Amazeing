@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
 /**
  * Created by nigel on 2/26/16.
  */
@@ -14,12 +13,14 @@ public class Amazeing extends JFrame {
     private int infobarWidth = 130;
     private int movebarHeight = 130;
     private int mazeSize = 25*16;
-
+    private Board board;
+    private JLabel info;
 
 
     public Amazeing() {
 
         initUI();
+        watch();
     }
     // Initializing the UI.
     private void initUI() {
@@ -54,7 +55,7 @@ public class Amazeing extends JFrame {
             }
         });
 
-                /*Creating Exit menuItem. */
+        /*Creating Exit menuItem. */
         JMenuItem menuInstructions = new JMenuItem("Show instructions");
         menuExit.setMnemonic(KeyEvent.VK_I);
         menuExit.setToolTipText("Show the instructions to play the game");
@@ -72,28 +73,46 @@ public class Amazeing extends JFrame {
         menubar.add(help);
         setJMenuBar(menubar);
 
-        /* Testing a vertical JToolBari on the right side of the window. */
-        JToolBar vertical = new JToolBar(JToolBar.VERTICAL);
-        vertical.setFloatable(false);
-        vertical.setMargin(new Insets(0, infobarWidth/2, 0, infobarWidth/2));
+        board = new Board();
+
+
+        /* Testing a info JLabel on the right side of the window. */
+        info = new JLabel();
+
+
+
 
         /* Testing JLabel on the south side of the window. */
         JLabel statusbar = new JLabel();
         statusbar.setPreferredSize(new Dimension(-1, movebarHeight));
         /* statusbar.setBorder(LineBorder.createGrayLineBorder()); */
 
-        add(vertical, BorderLayout.EAST);
+        add(info, BorderLayout.EAST);
         add(statusbar, BorderLayout.SOUTH);
+
         /* Adding a board to the center of the window. */
-        add(new Board(), BorderLayout.CENTER);
+        add(board, BorderLayout.CENTER);
 
         setSize(mazeSize+infobarWidth+4, mazeSize+movebarHeight+21);
         setResizable(false);
         setTitle("Amazeing");
-        //setBackground(Color.lightGray);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+
+    public void watch () {
+        Thread watch = new Thread() {
+
+            public void run() {
+                while (true) {
+                    info.setText("Time:" + board.getTime());
+                }
+            }
+        };
+
+        watch.start();
+    }
+
     /* Main. */
     public static void main(String[] args) {
 
