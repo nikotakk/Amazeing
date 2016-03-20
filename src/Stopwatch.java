@@ -37,16 +37,16 @@ public class Stopwatch {
     /* Returns the elapsed time if the Watch is running, else returns elapsedTime. */
     public long getElapsedTime() {
         if (isRunning) {
-            return System.nanoTime() - startTime;
+            return (System.nanoTime() - startTime) / 10000000;
         }
         return elapsedTime;
     }
+
     public long getTimeSeconds() {
         if (isRunning) {
-            System.out.println( (System.nanoTime() - startTime) / 1000);
-            return (System.nanoTime() - startTime) / 1000;
+            return (System.nanoTime() - startTime) / 1000000000;
         }
-        return elapsedTime / 1000;
+        return elapsedTime / 1000000000;
     }
 
 

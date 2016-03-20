@@ -105,7 +105,8 @@ public class Amazeing extends JFrame {
 
             public void run() {
                 while (true) {
-                    info.setText("Time:" + board.getTime());
+                    long milliSeconds = board.getTime() - board.getTimeSec()*100;
+                    info.setText("Time:" + board.getTimeSec() + "," + milliSeconds);
                 }
             }
         };

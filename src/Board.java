@@ -53,17 +53,20 @@ public class Board extends JPanel implements ActionListener {
         timer = new Timer(DELAY, this);
         timer.start();
         watch = new Stopwatch();
-        watch.start();
     }
 
-    public long getTime() {
+    public long getTimeSec() {
         return watch.getTimeSeconds();
+    }
+    public long getTime() {
+        return watch.getElapsedTime();
     }
     // Painting components.
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (inGame) {
+            watch.start();
             drawMap(g);
             print("Drawing map");
             drawBall(g);
@@ -71,6 +74,7 @@ public class Board extends JPanel implements ActionListener {
 
             Toolkit.getDefaultToolkit().sync();
             if (paused) {
+                watch.stop();
                 showScreen(g, true);
             }
         }
