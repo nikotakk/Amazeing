@@ -5,7 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Objects;
 import javax.swing.*;
+import org.apache.commons.lang3.time.*;
 
 /**
  * Created by nigel on 2/26/16.
@@ -16,7 +18,7 @@ public class Board extends JPanel implements ActionListener {
     private Timer timer;
     private Map map;
     private Ball ball;
-    private Stopwatch watch;
+    private StopWatch watch;
     private final int DELAY = 10;
     private boolean inGame = false;
     private boolean paused = false;
@@ -52,21 +54,26 @@ public class Board extends JPanel implements ActionListener {
         ball = new Ball();
         timer = new Timer(DELAY, this);
         timer.start();
-        watch = new Stopwatch();
+        watch = new StopWatch();
     }
 
-    public long getTimeSec() {
-        return watch.getTimeSeconds();
+    public long getTime(String secondOrMillis) {
+        if (Objects.equals(secondOrMillis, "seconds")) {
+            return watch.getTime()/1000;
+        } else {
+            return watch.getTime()/10;
+        }
     }
-    public long getTime() {
-        return watch.getElapsedTime();
-    }
+
+
     // Painting components.
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (inGame) {
-            watch.start();
+            if (watch.isSuspended()) {
+                watch.resume();
+            }
             drawMap(g);
             print("Drawing map");
             drawBall(g);
@@ -74,12 +81,12 @@ public class Board extends JPanel implements ActionListener {
 
             Toolkit.getDefaultToolkit().sync();
             if (paused) {
-                watch.stop();
+                watch.suspend();
                 showScreen(g, true);
             }
         }
         else {
-            showScreen(g, paused);
+            showScreen(g, false);
         }
     }
 
@@ -96,7 +103,6 @@ public class Board extends JPanel implements ActionListener {
             print("Drawing 'Paused'");
         } else {
             g.drawImage(instructions,1,1,this);
-            print("Drawing instructions");
         }
 
     }
@@ -177,6 +183,7 @@ public class Board extends JPanel implements ActionListener {
             } else {
                 if (key == KeyEvent.VK_G) {
                     inGame = true;
+                    watch.start();
                     System.out.println("G pressed");
                 }
             }
