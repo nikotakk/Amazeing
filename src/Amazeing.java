@@ -35,24 +35,38 @@ public class Amazeing extends JFrame {
         statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.X_AXIS));
         statusBar.setPreferredSize(new Dimension(mazeSize, movebarHeight));
         statusBar.setBackground(Color.LIGHT_GRAY);
-//        statusBar.setBorder(LineBorder.createGrayLineBorder());
+        statusBar.setBorder(LineBorder.createBlackLineBorder());
+
         statusBar.add(time);
         statusBar.add(Box.createHorizontalGlue());
 
         /* Creating a box of buttons into the statusBar. */
-//        JLabel buttonsBox = new JLabel();
-//        buttonsBox.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-//        buttonsBox.setLayout(new GridLayout(2,3,5,5));
-//        String[] buttons = { "", "^", "", "<", "v", ">" };
-//
-//        for (int i = 0; i < buttons.length; i++) {
-//            if (i == 0 || i == 2)
-//                buttonsBox.add(new JLabel(buttons[i]));
-//            else
-//                buttonsBox.add(new JButton(buttons[i]));
-//        }
-//        statusBar.add(buttonsBox);
-//        statusBar.add(Box.createRigidArea(new Dimension(0, 15)));
+        JPanel buttonsBox = new JPanel();
+        buttonsBox.setLayout(new GridBagLayout());
+//        buttonsBox.setBorder(LineBorder.createBlackLineBorder());
+//        buttonsBox.setPreferredSize(new Dimension(50,movebarHeight));
+
+        JButton up = new JButton("^");
+        JButton left = new JButton("<");
+        JButton down = new JButton("v");
+        JButton right = new JButton(">");
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        buttonsBox.add(up, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        buttonsBox.add(down, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        buttonsBox.add(left, gbc);
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        buttonsBox.add(right, gbc);
+//TODO: Move the ball when clicking the buttons.
+        statusBar.add(buttonsBox);
 
         add(statusBar, BorderLayout.SOUTH);
 
