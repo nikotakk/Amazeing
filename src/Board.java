@@ -28,8 +28,8 @@ public class Board extends JPanel implements ActionListener {
 
 
 
-    public void print(String whatYouWant) {
-        System.out.println(whatYouWant);
+    public void print(String text) {
+        System.out.println(text);
     }
 
     public Board() {
@@ -102,7 +102,7 @@ public class Board extends JPanel implements ActionListener {
             timer.stop();
             print("Drawing 'Paused'");
         } else {
-            g.drawImage(instructions,1,1,this);
+            g.drawImage(instructions,0,0,this);
         }
 
     }
