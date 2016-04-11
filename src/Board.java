@@ -178,7 +178,6 @@ public class Board extends JPanel implements ActionListener {
                         paused = false;
                         print("Setting 'paused' to False");
                     }
-//                System.exit(1);
                 }
             } else {
                 if (key == KeyEvent.VK_G) {

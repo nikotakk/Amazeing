@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 
 public class Amazeing extends JFrame {
 
-    private int movebarHeight = 100;
+    private int movebarHeight = 70;
     private int mazeSize = 25*16;
     private Board board;
     private JPanel info;
@@ -28,7 +28,6 @@ public class Amazeing extends JFrame {
     private void initUI() {
 
         initMenuBar();
-        time = new JLabel();
 
         /* Testing JLabel on the south side of the window. */
         JLabel statusBar = new JLabel();
@@ -37,15 +36,9 @@ public class Amazeing extends JFrame {
         statusBar.setBackground(Color.LIGHT_GRAY);
         statusBar.setBorder(LineBorder.createBlackLineBorder());
 
-        statusBar.add(time);
-        statusBar.add(Box.createHorizontalGlue());
-
         /* Creating a box of buttons into the statusBar. */
         JPanel buttonsBox = new JPanel();
         buttonsBox.setLayout(new GridBagLayout());
-//        buttonsBox.setBorder(LineBorder.createBlackLineBorder());
-//        buttonsBox.setPreferredSize(new Dimension(50,movebarHeight));
-
         JButton up = new JButton("^");
         JButton left = new JButton("<");
         JButton down = new JButton("v");
@@ -66,6 +59,28 @@ public class Amazeing extends JFrame {
         gbc.gridy = 1;
         buttonsBox.add(right, gbc);
 //TODO: Move the ball when clicking the buttons.
+//        buttonsBox.setBorder(LineBorder.createBlackLineBorder());
+
+        /* Adding best time, current time and current lvl into the statusBar. */
+        JPanel infoBox = new JPanel();
+        infoBox.setAlignmentX(1f);
+        infoBox.setLayout(new BoxLayout(infoBox, BoxLayout.Y_AXIS));
+//        infoBox.setBorder(LineBorder.createGrayLineBorder());
+
+        infoBox.add(new JLabel("Level: 1"));
+        infoBox.add(new JLabel("Highscore: "));
+
+        time = new JLabel();
+        time.setPreferredSize(new Dimension(75,25));
+//        time.setBorder(LineBorder.createBlackLineBorder());
+
+        statusBar.add(infoBox);
+        statusBar.add(time);
+//        statusBar.add(Box.createHorizontalGlue());
+//        statusBar.add(Box.createRigidArea(new Dimension(5, 0)));
+//        statusBar.add(time);
+//        statusBar.add(Box.createHorizontalGlue());
+//        statusBar.add(Box.createRigidArea(new Dimension(110, 0)));
         statusBar.add(buttonsBox);
 
         add(statusBar, BorderLayout.SOUTH);
