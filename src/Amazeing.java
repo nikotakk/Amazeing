@@ -57,7 +57,7 @@ public class Amazeing extends JFrame {
             }
         });
 
-        /*Creating Instructions menuItem. */
+        /* Creating Instructions menuItem. */
         JMenuItem menuInstructions = new JMenuItem("Show instructions");
         menuExit.setMnemonic(KeyEvent.VK_E);
         menuExit.setToolTipText("Show the instructions to play the game");
@@ -68,8 +68,45 @@ public class Amazeing extends JFrame {
             }
         });
 
-        /* Adding Exit and Reset into Game, Instructions into Help, and adding them all into menuBar. */
+        /* Creating highScore menuItem. */
+        JMenuItem menuHighScore = new JMenuItem("Highscores");
+        menuHighScore.setMnemonic(KeyEvent.VK_H);
+        menuHighScore.setToolTipText("Show the highscores of the levels.");
+        menuHighScore.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+// TODO: show highscore.
+            }
+        });
+
+          /* Creating Settings menuItem. */
+        JMenuItem menuSettings = new JMenuItem("Settings");
+        menuSettings.setMnemonic(KeyEvent.VK_S);
+        menuSettings.setToolTipText("Show the settings.");
+        menuSettings.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+// TODO: show highscore.
+            }
+        });
+
+        /* Creating Solution menuItem. */
+        JMenuItem menuSolution = new JMenuItem("Solution");
+        menuSolution.setMnemonic(KeyEvent.VK_O);
+        menuSolution.setToolTipText("Show the solution to this level.");
+        menuSolution.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+// TODO: show the solution.
+            }
+        });
+
+        /* Adding Reset, Highscore, Settings and Exit into Game, Instructions into Help, and adding them all into menuBar. */
         game.add(menuReset);
+        game.addSeparator();
+        game.add(menuHighScore);
+        game.add(menuSolution);
+        game.add(menuSettings);
         game.addSeparator();
         game.add(menuExit);
         help.add(menuInstructions);
@@ -112,21 +149,21 @@ public class Amazeing extends JFrame {
         gbc.gridy = 1;
         buttonsBox.add(right, gbc);
 //TODO: Move the ball when clicking the buttons.
-//        buttonsBox.setBorder(LineBorder.createBlackLineBorder());
 
         /* Adding best time, current time and current lvl into the statusBar. */
         JPanel infoBox = new JPanel();
         infoBox.setAlignmentX(1f);
         infoBox.setLayout(new BoxLayout(infoBox, BoxLayout.Y_AXIS));
-        infoBox.setPreferredSize(new Dimension(150,50));
-//        infoBox.setBorder(LineBorder.createGrayLineBorder());
+        infoBox.setPreferredSize(new Dimension(130,50));
 
         infoBox.add(new JLabel("Level: 1"));
         infoBox.add(new JLabel("Highscore: "));
 
         time = new JLabel();
-        time.setPreferredSize(new Dimension(75,25));
-//        time.setBorder(LineBorder.createBlackLineBorder());
+        time.setPreferredSize(new Dimension(90,25));
+        time.setBorder(LineBorder.createBlackLineBorder());
+        infoBox.setBorder(LineBorder.createGrayLineBorder());
+        buttonsBox.setBorder(LineBorder.createBlackLineBorder());
 
         statusBar.add(Box.createRigidArea(new Dimension(5, 0)));
         statusBar.add(infoBox);
