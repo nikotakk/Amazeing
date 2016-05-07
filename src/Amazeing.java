@@ -15,7 +15,6 @@ public class Amazeing extends JFrame {
     private int movebarHeight = 70;
     private int mazeSize = 25*16;
     private Board board;
-    private JPanel info;
     private JLabel time;
 
 
@@ -64,7 +63,8 @@ public class Amazeing extends JFrame {
         menuExit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-// TODO: show instructions.
+                System.out.println("Setting inGame to false.");
+                board.setInGame(false);
             }
         });
 
@@ -101,7 +101,7 @@ public class Amazeing extends JFrame {
             }
         });
 
-        /* Adding Reset, Highscore, Settings and Exit into Game, Instructions into Help, and adding them all into menuBar. */
+        /* Adding Reset, Highscore, Solution, Settings and Exit into Game, Instructions into Help, and adding them all into menuBar. */
         game.add(menuReset);
         game.addSeparator();
         game.add(menuHighScore);
@@ -119,7 +119,7 @@ public class Amazeing extends JFrame {
     /* Initializing the UI. */
     private void initUI() {
 
-        /* statusBar JLabel on the south side of the window. */
+        /* Creating a statusBar JLabel on the south side of the window. */
         JLabel statusBar = new JLabel();
         statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.X_AXIS));
         statusBar.setPreferredSize(new Dimension(mazeSize, movebarHeight));
@@ -134,6 +134,31 @@ public class Amazeing extends JFrame {
         JButton down = new JButton("v");
         JButton right = new JButton(">");
         GridBagConstraints gbc = new GridBagConstraints();
+
+        up.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                System.out.println("Up-key pressed.");
+            }
+        });
+        left.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                System.out.println("Left-key pressed.");
+            }
+        });
+        down.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                System.out.println("Down-key pressed.");
+            }
+        });
+        right.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                System.out.println("Right-key pressed.");
+            }
+        });
 
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 1;
@@ -161,9 +186,9 @@ public class Amazeing extends JFrame {
 
         time = new JLabel();
         time.setPreferredSize(new Dimension(90,25));
-        time.setBorder(LineBorder.createBlackLineBorder());
-        infoBox.setBorder(LineBorder.createGrayLineBorder());
-        buttonsBox.setBorder(LineBorder.createBlackLineBorder());
+//        time.setBorder(LineBorder.createBlackLineBorder());
+//        infoBox.setBorder(LineBorder.createGrayLineBorder());
+//        buttonsBox.setBorder(LineBorder.createBlackLineBorder());
 
         statusBar.add(Box.createRigidArea(new Dimension(5, 0)));
         statusBar.add(infoBox);

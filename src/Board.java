@@ -65,11 +65,15 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    public void setInGame(boolean value) {
+        inGame = value;
+    }
 
     // Painting components.
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        super.requestFocusInWindow();
         if (inGame) {
             if (watch.isSuspended()) {
                 watch.resume();
@@ -134,10 +138,10 @@ public class Board extends JPanel implements ActionListener {
     }
 
     //Using keyboard, moving and collision checks.
-    private class TAdapter extends KeyAdapter {
+    public class TAdapter extends KeyAdapter {
 
         public void keyPressed(KeyEvent e) {
-
+            print("Input given:");
             int key = e.getKeyCode();
 
             if (inGame) {
@@ -180,10 +184,10 @@ public class Board extends JPanel implements ActionListener {
                     }
                 }
             } else {
-                if (key == KeyEvent.VK_G) {
+                if (key == KeyEvent.VK_S || key == KeyEvent.VK_ESCAPE) {
                     inGame = true;
                     watch.start();
-                    System.out.println("G pressed");
+                    System.out.println("S pressed");
                 }
             }
 
