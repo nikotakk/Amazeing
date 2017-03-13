@@ -10,7 +10,7 @@ import javax.swing.*;
 import org.apache.commons.lang3.time.*;
 
 /**
- * Created by nigel on 2/26/16.
+ * Created by Niko Takkinen on 2/26/16.
  */
 
 public class Board extends JPanel implements ActionListener {
@@ -23,19 +23,17 @@ public class Board extends JPanel implements ActionListener {
     private boolean inGame = false;
     private boolean paused = false;
     private int blockSize = 25;
-    private Image instructions;
-    private Image pause;
 
 
-
-    public void print(String text) {
+    private void print(String text) {
         System.out.println(text);
     }
 
-    public Board() {
+    Board() {
 
         initBoard();
     }
+
     // Initializing the gameboard.
     private void initBoard() {
 
@@ -45,7 +43,7 @@ public class Board extends JPanel implements ActionListener {
 
         initVariables();
     }
-    /* Initializing the variables. */
+    /* Initializing the variables used in Board class. */
     private void initVariables() {
 
         inGame = false;
@@ -79,9 +77,7 @@ public class Board extends JPanel implements ActionListener {
                 watch.resume();
             }
             drawMap(g);
-            print("Drawing map");
             drawBall(g);
-            print("Drawing ball");
 
             Toolkit.getDefaultToolkit().sync();
             if (paused) {
@@ -98,8 +94,8 @@ public class Board extends JPanel implements ActionListener {
     private void showScreen(Graphics g, boolean paused) {
         ImageIcon instr = new ImageIcon("src/resources/instructions.png");
         ImageIcon ps = new ImageIcon("src/resources/pause.png");
-        pause = ps.getImage();
-        instructions = instr.getImage();
+        Image pause = ps.getImage();
+        Image instructions = instr.getImage();
 
         if (paused) {
             g.drawImage(pause,0,100,this);
@@ -141,10 +137,11 @@ public class Board extends JPanel implements ActionListener {
     public class TAdapter extends KeyAdapter {
 
         public void keyPressed(KeyEvent e) {
-            print("Input given:");
+            System.out.print("Input given: ");
             int key = e.getKeyCode();
 
             if (inGame) {
+
                 if ( (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) && timer.isRunning() ) {
                     if (!map.getMap(ball.getX() - 1, ball.getY()).equals("w")) {
                         ball.move(-1, 0);

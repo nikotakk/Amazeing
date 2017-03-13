@@ -1,5 +1,3 @@
-
-import javax.sound.sampled.Line;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -7,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 /**
- * Created by nigel on 2/26/16.
+ * Created by Niko Takkinen on 2/26/16.
  */
 
 public class Amazeing extends JFrame {
@@ -18,7 +16,7 @@ public class Amazeing extends JFrame {
     private JLabel time;
 
 
-    public Amazeing() {
+    Amazeing() {
 
         initMenuBar();
         initUI();
@@ -44,6 +42,7 @@ public class Amazeing extends JFrame {
 // TODO: reset the map.
             }
         });
+
         /*Creating Exit menuItem. */
         JMenuItem menuExit= new JMenuItem("Exit");
         menuExit.setMnemonic(KeyEvent.VK_E);
@@ -60,12 +59,9 @@ public class Amazeing extends JFrame {
         JMenuItem menuInstructions = new JMenuItem("Show instructions");
         menuExit.setMnemonic(KeyEvent.VK_E);
         menuExit.setToolTipText("Show the instructions to play the game");
-        menuExit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                System.out.println("Setting inGame to false.");
-                board.setInGame(false);
-            }
+        menuExit.addActionListener((ActionEvent event) -> {
+            System.out.println("Setting inGame to false.");
+            board.setInGame(false);
         });
 
         /* Creating highScore menuItem. */
@@ -113,7 +109,6 @@ public class Amazeing extends JFrame {
         menuBar.add(game);
         menuBar.add(help);
         setJMenuBar(menuBar);
-
     }
 
     /* Initializing the UI. */
@@ -135,30 +130,10 @@ public class Amazeing extends JFrame {
         JButton right = new JButton(">");
         GridBagConstraints gbc = new GridBagConstraints();
 
-        up.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                System.out.println("Up-key pressed.");
-            }
-        });
-        left.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                System.out.println("Left-key pressed.");
-            }
-        });
-        down.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                System.out.println("Down-key pressed.");
-            }
-        });
-        right.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                System.out.println("Right-key pressed.");
-            }
-        });
+        up.addActionListener(event -> System.out.println("Up-key clicked."));
+        left.addActionListener(event -> System.out.println("Left-key clicked."));
+        down.addActionListener(event -> System.out.println("Down-key clicked."));
+        right.addActionListener(event -> System.out.println("Right-key clicked."));
 
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 1;
@@ -209,20 +184,17 @@ public class Amazeing extends JFrame {
         setResizable(false);
         setTitle("Amazeing");
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     /* The stopwatch to be used in the game. */
-    public void watch () {
-        Thread watch = new Thread() {
-
-            public void run() {
-                while (true) {
-                    long milliSeconds = board.getTime("millis") - board.getTime("seconds")*100;
-                    time.setText("Time:" + board.getTime("seconds") + "." + milliSeconds);
-                }
+    private void watch () {
+        Thread watch = new Thread(() -> {
+            while (true) {
+                long milliSeconds = board.getTime("millis") - board.getTime("seconds")*100;
+                time.setText("Time:" + board.getTime("seconds") + "." + milliSeconds);
             }
-        };
+        });
 
         watch.start();
     }
