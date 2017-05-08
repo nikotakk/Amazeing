@@ -23,14 +23,10 @@ public class Board extends JPanel implements ActionListener {
     private boolean inGame = false;
     private boolean paused = false;
     private int blockSize = 25;
+    private boolean goalReached = false;
 
-
-    private void print(String text) {
-        System.out.println(text);
-    }
 
     Board() {
-
         initBoard();
     }
 
@@ -41,30 +37,27 @@ public class Board extends JPanel implements ActionListener {
         setFocusable(true);
         setBackground(Color.BLACK);
 
-        initVariables();
+        initVariables(4, false);
     }
     /* Initializing the variables used in Board class. */
-    private void initVariables() {
+    private void initVariables(int mapNumber, boolean gameStarted) {
 
-        inGame = false;
+        inGame = gameStarted;
         paused = false;
-        map = new Map();
+        map = new Map(mapNumber);
         ball = new Ball();
         timer = new Timer(DELAY, this);
         timer.start();
         watch = new StopWatch();
     }
 
-    public long getTime(String secondOrMillis) {
-        if (Objects.equals(secondOrMillis, "seconds")) {
-            return watch.getTime()/1000;
-        } else {
-            return watch.getTime()/10;
-        }
+    public void resetMap(){
+        initVariables(map.getCurrentMap(), true);
+        watch.start();
     }
 
-    public void setInGame(boolean value) {
-        inGame = value;
+    double getTime() {
+        return ((watch.getTime()/1000 + (double)(watch.getTime()/10 - watch.getTime()/1000)) / 100);
     }
 
     // Painting components.
@@ -84,10 +77,24 @@ public class Board extends JPanel implements ActionListener {
                 watch.suspend();
                 showScreen(g, true);
             }
+
+            // System.out.format("Balls coordinates: x = %d y = %d%n", ball.getX(), ball.getY() );
+            if (ball.getX() == 14 && ball.getY() == 14) {
+                goalReached = true;
+                System.out.println("GOAL REACHED");
+                endGame();
+            }
         }
         else {
             showScreen(g, false);
         }
+    }
+
+    private void endGame() {
+        watch.suspend();
+        inGame = false;
+        System.out.format("Finish time: %s", getTime());
+        // notifyObservers?
     }
 
     // Drawing instructions or pause screen.
@@ -100,11 +107,10 @@ public class Board extends JPanel implements ActionListener {
         if (paused) {
             g.drawImage(pause,0,100,this);
             timer.stop();
-            print("Drawing 'Paused'");
+            System.out.println("Drawing 'Paused'");
         } else {
             g.drawImage(instructions,0,0,this);
         }
-
     }
 
     // Drawing the balls graphics.
@@ -124,6 +130,9 @@ public class Board extends JPanel implements ActionListener {
                 if (map.getMap(x,y).equals("w")) {
                     g.drawImage(map.getWall(), x * blockSize, y * blockSize, null);
                 }
+                if (map.getMap(x,y).equals("f")) {
+                    g.drawImage(map.getGoal(), x * blockSize, y * blockSize, null);
+                }
             }
         }
     }
@@ -134,10 +143,10 @@ public class Board extends JPanel implements ActionListener {
     }
 
     //Using keyboard, moving and collision checks.
-    public class TAdapter extends KeyAdapter {
+    private class TAdapter extends KeyAdapter {
 
         public void keyPressed(KeyEvent e) {
-            System.out.print("Input given: ");
+            System.out.println("Input given: ");
             int key = e.getKeyCode();
 
             if (inGame) {
@@ -173,11 +182,11 @@ public class Board extends JPanel implements ActionListener {
                     System.out.println("Esc pressed.");
                     if (timer.isRunning()) {
                         paused = true;
-                        print("Setting 'paused' to True");
+                        System.out.println("Setting 'paused' to True");
                     } else {
                         timer.start();
                         paused = false;
-                        print("Setting 'paused' to False");
+                        System.out.println("Setting 'paused' to False");
                     }
                 }
             } else {
@@ -187,7 +196,6 @@ public class Board extends JPanel implements ActionListener {
                     System.out.println("S pressed");
                 }
             }
-
         }
 
     /*    public void keyReleased(KeyEvent e) {

@@ -1,9 +1,10 @@
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
+import static javax.swing.GroupLayout.Alignment.CENTER;
+import static javax.swing.LayoutStyle.ComponentPlacement.RELATED;
+
 /**
  * Created by Niko Takkinen on 2/26/16.
  */
@@ -14,9 +15,7 @@ public class Amazeing extends JFrame {
     private int mazeSize = 25*16;
     private Board board;
     private JLabel time;
-
-
-    Amazeing() {
+    private Amazeing() {
 
         initMenuBar();
         initUI();
@@ -33,72 +32,53 @@ public class Amazeing extends JFrame {
         help.setMnemonic(KeyEvent.VK_H);
 
         /*Creating Reset menuItem. */
-        JMenuItem menuReset = new JMenuItem("Reset the level");
+        JMenuItem menuReset = new JMenuItem("Reset the map");
         menuReset.setMnemonic(KeyEvent.VK_R);
-        menuReset.setToolTipText("Reset the ongoing level");
-        menuReset.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-// TODO: reset the map.
-            }
-        });
+        menuReset.setToolTipText("Reset the ongoing map");
+        menuReset.addActionListener(event -> board.resetMap());
+
+        JMenuItem menuChooseMap = new JMenuItem("Choose map");
+        menuChooseMap.setMnemonic(KeyEvent.VK_R);
+        menuChooseMap.setToolTipText("Choose which map to play.");
+        menuChooseMap.addActionListener(event -> showMap());
 
         /*Creating Exit menuItem. */
         JMenuItem menuExit= new JMenuItem("Exit");
         menuExit.setMnemonic(KeyEvent.VK_E);
         menuExit.setToolTipText("Exit application");
-        menuExit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                System.out.println("E pressed.");
-                System.exit(0);
-            }
-        });
+        menuExit.addActionListener(event -> System.exit(0));
 
         /* Creating Instructions menuItem. */
         JMenuItem menuInstructions = new JMenuItem("Show instructions");
-        menuExit.setMnemonic(KeyEvent.VK_E);
-        menuExit.setToolTipText("Show the instructions to play the game");
-        menuExit.addActionListener((ActionEvent event) -> {
-            System.out.println("Setting inGame to false.");
-            board.setInGame(false);
-        });
+        menuInstructions.setMnemonic(KeyEvent.VK_I);
+        menuInstructions.setToolTipText("Show the instructions to play the game");
+        menuInstructions.addActionListener(event -> showHelp());
 
         /* Creating highScore menuItem. */
         JMenuItem menuHighScore = new JMenuItem("Highscores");
         menuHighScore.setMnemonic(KeyEvent.VK_H);
-        menuHighScore.setToolTipText("Show the highscores of the levels.");
-        menuHighScore.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-// TODO: show highscore.
-            }
+        menuHighScore.setToolTipText("Show the highscores of the maps.");
+        menuHighScore.addActionListener(event -> {
+        // TODO: show highscore according to which map you're in.
         });
 
           /* Creating Settings menuItem. */
         JMenuItem menuSettings = new JMenuItem("Settings");
         menuSettings.setMnemonic(KeyEvent.VK_S);
         menuSettings.setToolTipText("Show the settings.");
-        menuSettings.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-// TODO: show highscore.
-            }
-        });
+        menuSettings.addActionListener(event -> showSettings());
 
         /* Creating Solution menuItem. */
         JMenuItem menuSolution = new JMenuItem("Solution");
         menuSolution.setMnemonic(KeyEvent.VK_O);
-        menuSolution.setToolTipText("Show the solution to this level.");
-        menuSolution.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-// TODO: show the solution.
-            }
+        menuSolution.setToolTipText("Show the solution to this map.");
+        menuSolution.addActionListener(event -> {
+        // TODO: show the solution according to which map you're in.
         });
 
-        /* Adding Reset, Highscore, Solution, Settings and Exit into Game, Instructions into Help, and adding them all into menuBar. */
+        /* Adding Reset, Choose map, Highscore, Solution, Settings and Exit into Game, Instructions into Help, and adding them all into menuBar. */
         game.add(menuReset);
+        game.add(menuChooseMap);
         game.addSeparator();
         game.add(menuHighScore);
         game.add(menuSolution);
@@ -109,6 +89,21 @@ public class Amazeing extends JFrame {
         menuBar.add(game);
         menuBar.add(help);
         setJMenuBar(menuBar);
+    }
+
+    private void showSettings() {
+        SettingsDialog settings = new SettingsDialog(this);
+        settings.setVisible(true);
+    }
+
+    private void showHelp() {
+        HelpDialog help = new HelpDialog(this);
+        help.setVisible(true);
+    }
+
+    private void showMap() {
+        MapDialog map = new MapDialog(this);
+        map.setVisible(true);
     }
 
     /* Initializing the UI. */
@@ -148,7 +143,7 @@ public class Amazeing extends JFrame {
         gbc.gridx = 2;
         gbc.gridy = 1;
         buttonsBox.add(right, gbc);
-//TODO: Move the ball when clicking the buttons.
+        //TODO: Move the ball when clicking the buttons.
 
         /* Adding best time, current time and current lvl into the statusBar. */
         JPanel infoBox = new JPanel();
@@ -156,32 +151,30 @@ public class Amazeing extends JFrame {
         infoBox.setLayout(new BoxLayout(infoBox, BoxLayout.Y_AXIS));
         infoBox.setPreferredSize(new Dimension(130,50));
 
-        infoBox.add(new JLabel("Level: 1"));
+        infoBox.add(new JLabel("Map: 1"));
         infoBox.add(new JLabel("Highscore: "));
 
+        /* Creating time label */
         time = new JLabel();
         time.setPreferredSize(new Dimension(90,25));
-//        time.setBorder(LineBorder.createBlackLineBorder());
-//        infoBox.setBorder(LineBorder.createGrayLineBorder());
-//        buttonsBox.setBorder(LineBorder.createBlackLineBorder());
 
+        /* Adding infobox, time and buttonsbox into statusBar. */
         statusBar.add(Box.createRigidArea(new Dimension(5, 0)));
         statusBar.add(infoBox);
         statusBar.add(time);
         statusBar.add(buttonsBox);
-//        statusBar.add(Box.createHorizontalGlue());
-//        statusBar.add(time);
-//        statusBar.add(Box.createHorizontalGlue());
-//        statusBar.add(Box.createRigidArea(new Dimension(110, 0)));
 
+        /* Adding statusbar to the south of the window. */
         add(statusBar, BorderLayout.SOUTH);
 
         /* Adding a board to the center of the window. */
         board = new Board();
         add(board, BorderLayout.CENTER);
 
-        setSize(mazeSize, mazeSize+movebarHeight+21);
-        setResizable(false);
+        setMinimumSize(new Dimension(400,500));
+        setSize(mazeSize+20, mazeSize+movebarHeight+70);
+
+        setResizable(true);
         setTitle("Amazeing");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -191,8 +184,7 @@ public class Amazeing extends JFrame {
     private void watch () {
         Thread watch = new Thread(() -> {
             while (true) {
-                long milliSeconds = board.getTime("millis") - board.getTime("seconds")*100;
-                time.setText("Time:" + board.getTime("seconds") + "." + milliSeconds);
+                time.setText("Time:" + board.getTime());
             }
         });
 
@@ -207,5 +199,153 @@ public class Amazeing extends JFrame {
             Amazeing game = new Amazeing();
             game.setVisible(true);
         });
+    }
+
+}
+
+class SettingsDialog extends JDialog implements ItemListener {
+    SettingsDialog(Frame parent) {
+        super(parent);
+        initSettings();
+    }
+
+    private void initSettings() {
+        setTitle("Settings");
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLocation(getParent().getLocation());
+        setModalityType(ModalityType.APPLICATION_MODAL);
+
+        JButton btn = new JButton("OK");
+        btn.addActionListener(event -> dispose());
+
+        JLabel color = new JLabel("Choose your balls color:");
+
+        ButtonGroup buttons = new ButtonGroup();
+
+        JRadioButton rb1 = new JRadioButton("Red", true);
+        JRadioButton rb2 = new JRadioButton("Green");
+        JRadioButton rb3 = new JRadioButton("Blue");
+        JRadioButton rb4 = new JRadioButton("Yellow");
+        JRadioButton rb5 = new JRadioButton("White");
+
+        buttons.add(rb1);
+        buttons.add(rb2);
+        buttons.add(rb3);
+        buttons.add(rb4);
+        buttons.add(rb5);
+
+        rb1.addItemListener(this);
+        rb2.addItemListener(this);
+        rb3.addItemListener(this);
+        rb4.addItemListener(this);
+        rb5.addItemListener(this);
+
+        createLayout(color, rb1, rb2, rb3, rb4, rb5, btn);
+        setSize(350, 300);
+
+    }
+
+    private void createLayout(JComponent... arg) {
+        Container pane = getContentPane();
+        GroupLayout gl = new GroupLayout(pane);
+        pane.setLayout(gl);
+
+        gl.setAutoCreateContainerGaps(true);
+        gl.setHorizontalGroup(gl.createParallelGroup()
+                .addComponent(arg[0])
+                .addComponent(arg[1])
+                .addComponent(arg[2])
+                .addComponent(arg[3])
+                .addComponent(arg[4])
+                .addComponent(arg[5])
+                .addComponent(arg[6])
+        );
+
+        gl.setVerticalGroup(gl.createSequentialGroup()
+                .addComponent(arg[0])
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(arg[1])
+                .addComponent(arg[2])
+                .addComponent(arg[3])
+                .addComponent(arg[4])
+                .addComponent(arg[5])
+                .addPreferredGap(RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(arg[6])
+        );
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+
+        int sel = e.getStateChange();
+        if (sel == ItemEvent.SELECTED) {
+            JRadioButton button = (JRadioButton) e.getSource();
+            String text = button.getText();
+            //TODO: Changing the balls color.
+        }
+    }
+}
+
+class HelpDialog extends JDialog {
+
+    HelpDialog(Frame parent) {
+        super(parent);
+        initHelp();
+    }
+
+    private void initHelp() {
+        setTitle("Instructions");
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLocation(getParent().getLocation());
+        setModalityType(ModalityType.APPLICATION_MODAL);
+
+        // Create a button and image.
+        JButton btn = new JButton("OK");
+        btn.addActionListener(event -> dispose());
+        ImageIcon instr = new ImageIcon("src/resources/instructions.png");
+        JLabel instructions = new JLabel(instr);
+
+        createLayout(instructions, btn);
+    }
+
+    private void createLayout(JLabel pic, JButton btn) {
+        Container pane = getContentPane();
+        GroupLayout gl = new GroupLayout(pane);
+        pane.setLayout(gl);
+
+        gl.setAutoCreateContainerGaps(true);
+        gl.setAutoCreateGaps(true);
+
+        gl.setHorizontalGroup(gl.createParallelGroup(CENTER)
+                        .addComponent(pic)
+                        .addComponent(btn)
+                //.addGap(200)
+        );
+
+        gl.setVerticalGroup(gl.createSequentialGroup()
+                //.addGap(30)
+                .addComponent(pic)
+                .addGap(20)
+                .addComponent(btn)
+                .addGap(20)
+        );
+        pack();
+    }
+}
+
+class MapDialog extends JDialog {
+
+    MapDialog(Frame parent) {
+        super(parent);
+        initMapDialog();
+    }
+
+    private void initMapDialog(){
+        setTitle("Choosing the map");
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLocation(getParent().getLocation());
+        setModalityType(ModalityType.APPLICATION_MODAL);
+        setSize(300,300);
+        //TODO: Changing maps.
     }
 }

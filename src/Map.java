@@ -8,20 +8,26 @@ import java.io.*;
 public class Map {
     private Scanner scanner;
     private String Map[] = new String[16];
-    private Image ground, wall;
+    private Image ground, wall, goal;
+    private int currentMap;
 
-    public Map() {
+    public Map(int mapNumber) {
         ImageIcon image = new ImageIcon("src/resources/ground.png");
         ground = image.getImage();
         image = new ImageIcon("src/resources/wall.png");
         wall = image.getImage();
+        image = new ImageIcon("src/resources/goal.png");
+        goal = image.getImage();
+        currentMap = mapNumber;
 
-        openFile();
+        openFile(currentMap);
         readFile();
         closeFile();
-
     }
 
+    public int getCurrentMap() {
+        return currentMap;
+    }
     public String getMap(int x, int y) {
         return Map[y].substring(x, x+1);
     }
@@ -32,14 +38,17 @@ public class Map {
     public Image getWall() {
         return wall;
     }
+    public Image getGoal() { return goal; }
 
-    private void openFile() {
+    private void openFile(int number) {
+        String pathToMap = "src/resources/Map" + number + ".txt";
         try {
-            scanner = new Scanner(new File("src/resources/Map.txt"));
+            scanner = new Scanner(new File(pathToMap));
         } catch(Exception e) {
             System.out.println("Error while loading the map");
         }
     }
+
     private void readFile() {
         while(scanner.hasNext()) {
             for (int i = 0; i <16; i++) {
@@ -47,6 +56,7 @@ public class Map {
             }
         }
     }
+
     private void closeFile() {
         scanner.close();
     }
