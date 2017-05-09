@@ -37,10 +37,10 @@ public class Board extends JPanel implements ActionListener {
         setFocusable(true);
         setBackground(Color.BLACK);
 
-        initVariables(4, false);
+        initVariables(1, false);
     }
     /* Initializing the variables used in Board class. */
-    private void initVariables(int mapNumber, boolean gameStarted) {
+    public void initVariables(int mapNumber, boolean gameStarted) {
 
         inGame = gameStarted;
         paused = false;
@@ -58,6 +58,10 @@ public class Board extends JPanel implements ActionListener {
 
     double getTime() {
         return ((watch.getTime()/1000 + (double)(watch.getTime()/10 - watch.getTime()/1000)) / 100);
+    }
+
+    int getMap() {
+        return map.getCurrentMap();
     }
 
     // Painting components.

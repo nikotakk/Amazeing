@@ -15,6 +15,7 @@ public class Amazeing extends JFrame {
     private int mazeSize = 25*16;
     private Board board;
     private JLabel time;
+
     private Amazeing() {
 
         initMenuBar();
@@ -73,7 +74,7 @@ public class Amazeing extends JFrame {
         menuSolution.setMnemonic(KeyEvent.VK_O);
         menuSolution.setToolTipText("Show the solution to this map.");
         menuSolution.addActionListener(event -> {
-        // TODO: show the solution according to which map you're in.
+            showSolution();
         });
 
         /* Adding Reset, Choose map, Highscore, Solution, Settings and Exit into Game, Instructions into Help, and adding them all into menuBar. */
@@ -89,6 +90,11 @@ public class Amazeing extends JFrame {
         menuBar.add(game);
         menuBar.add(help);
         setJMenuBar(menuBar);
+    }
+
+    private void showSolution() {
+        SolutionDialog solution = new SolutionDialog(this);
+        solution.setVisible(true);
     }
 
     private void showSettings() {
@@ -191,7 +197,7 @@ public class Amazeing extends JFrame {
         watch.start();
     }
 
-    /* Main. */
+    /* -------------  Main  -------------------------------------- */
     public static void main(String[] args) {
 
         EventQueue.invokeLater(() -> {
@@ -201,151 +207,263 @@ public class Amazeing extends JFrame {
         });
     }
 
-}
+    private class SettingsDialog extends JDialog implements ItemListener {
+        SettingsDialog(Frame parent) {
+            super(parent);
+            initSettingsDialog();
+        }
 
-class SettingsDialog extends JDialog implements ItemListener {
-    SettingsDialog(Frame parent) {
-        super(parent);
-        initSettings();
+        private void initSettingsDialog() {
+            setTitle("Settings");
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setLocation(getParent().getLocation());
+            setModalityType(ModalityType.APPLICATION_MODAL);
+
+            JButton btn = new JButton("OK");
+            btn.addActionListener(event -> dispose());
+
+            JLabel color = new JLabel("Choose your balls color:");
+
+            ButtonGroup buttons = new ButtonGroup();
+
+            JRadioButton rb1 = new JRadioButton("Red", true);
+            JRadioButton rb2 = new JRadioButton("Green");
+            JRadioButton rb3 = new JRadioButton("Blue");
+            JRadioButton rb4 = new JRadioButton("Yellow");
+            JRadioButton rb5 = new JRadioButton("White");
+
+            buttons.add(rb1);
+            buttons.add(rb2);
+            buttons.add(rb3);
+            buttons.add(rb4);
+            buttons.add(rb5);
+
+            rb1.addItemListener(this);
+            rb2.addItemListener(this);
+            rb3.addItemListener(this);
+            rb4.addItemListener(this);
+            rb5.addItemListener(this);
+
+            createLayout(color, rb1, rb2, rb3, rb4, rb5, btn);
+            setSize(350, 300);
+
+        }
+
+        private void createLayout(JComponent... arg) {
+            Container pane = getContentPane();
+            GroupLayout gl = new GroupLayout(pane);
+            pane.setLayout(gl);
+
+            gl.setAutoCreateContainerGaps(true);
+            gl.setHorizontalGroup(gl.createParallelGroup()
+                    .addComponent(arg[0])
+                    .addComponent(arg[1])
+                    .addComponent(arg[2])
+                    .addComponent(arg[3])
+                    .addComponent(arg[4])
+                    .addComponent(arg[5])
+                    .addComponent(arg[6])
+            );
+
+            gl.setVerticalGroup(gl.createSequentialGroup()
+                    .addComponent(arg[0])
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(arg[1])
+                    .addComponent(arg[2])
+                    .addComponent(arg[3])
+                    .addComponent(arg[4])
+                    .addComponent(arg[5])
+                    .addPreferredGap(RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(arg[6])
+            );
+        }
+
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+
+            int selection = e.getStateChange();
+            if (selection == ItemEvent.SELECTED) {
+                JRadioButton button = (JRadioButton) e.getSource();
+                String text = button.getText();
+                //TODO: Changing the balls color.
+            }
+        }
     }
 
-    private void initSettings() {
-        setTitle("Settings");
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLocation(getParent().getLocation());
-        setModalityType(ModalityType.APPLICATION_MODAL);
 
-        JButton btn = new JButton("OK");
-        btn.addActionListener(event -> dispose());
+    private class MapDialog extends JDialog implements ItemListener {
 
-        JLabel color = new JLabel("Choose your balls color:");
+        private int chosenMap = 1;
 
-        ButtonGroup buttons = new ButtonGroup();
+        MapDialog(Frame parent) {
+            super(parent);
+            initMapDialog();
+        }
 
-        JRadioButton rb1 = new JRadioButton("Red", true);
-        JRadioButton rb2 = new JRadioButton("Green");
-        JRadioButton rb3 = new JRadioButton("Blue");
-        JRadioButton rb4 = new JRadioButton("Yellow");
-        JRadioButton rb5 = new JRadioButton("White");
+        private void initMapDialog(){
+            setTitle("Choosing the map");
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setLocation(getParent().getLocation());
+            setModalityType(ModalityType.APPLICATION_MODAL);
+            JButton btn = new JButton("OK");
+            btn.addActionListener(event -> {
+                board.initVariables(chosenMap, true);
+                dispose();
+            });
 
-        buttons.add(rb1);
-        buttons.add(rb2);
-        buttons.add(rb3);
-        buttons.add(rb4);
-        buttons.add(rb5);
+            JLabel map = new JLabel("Choose a map to play:");
 
-        rb1.addItemListener(this);
-        rb2.addItemListener(this);
-        rb3.addItemListener(this);
-        rb4.addItemListener(this);
-        rb5.addItemListener(this);
+            ButtonGroup buttons = new ButtonGroup();
 
-        createLayout(color, rb1, rb2, rb3, rb4, rb5, btn);
-        setSize(350, 300);
+            JRadioButton rb1 = new JRadioButton("Map 1", true);
+            JRadioButton rb2 = new JRadioButton("Map 2");
+            JRadioButton rb3 = new JRadioButton("Map 3");
+            JRadioButton rb4 = new JRadioButton("Map 4");
 
+            buttons.add(rb1);
+            buttons.add(rb2);
+            buttons.add(rb3);
+            buttons.add(rb4);
+
+            rb1.addItemListener(this);
+            rb2.addItemListener(this);
+            rb3.addItemListener(this);
+            rb4.addItemListener(this);
+
+            createLayout(map, rb1, rb2, rb3, rb4, btn);
+            setSize(350, 300);
+        }
+
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            int selection = e.getStateChange();
+            if (selection == ItemEvent.SELECTED) {
+                JRadioButton button = (JRadioButton) e.getSource();
+                chosenMap = Integer.parseInt(button.getText().substring(4, 5));
+                //System.out.println(chosenMap);
+            }
+        }
+
+        private void createLayout(JComponent... arg) {
+            Container pane = getContentPane();
+            GroupLayout gl = new GroupLayout(pane);
+            pane.setLayout(gl);
+
+            gl.setAutoCreateContainerGaps(true);
+            gl.setHorizontalGroup(gl.createParallelGroup()
+                    .addComponent(arg[0])
+                    .addComponent(arg[1])
+                    .addComponent(arg[2])
+                    .addComponent(arg[3])
+                    .addComponent(arg[4])
+                    .addComponent(arg[5])
+            );
+
+            gl.setVerticalGroup(gl.createSequentialGroup()
+                    .addComponent(arg[0])
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(arg[1])
+                    .addComponent(arg[2])
+                    .addComponent(arg[3])
+                    .addComponent(arg[4])
+                    .addPreferredGap(RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(arg[5])
+            );
+        }
     }
 
-    private void createLayout(JComponent... arg) {
-        Container pane = getContentPane();
-        GroupLayout gl = new GroupLayout(pane);
-        pane.setLayout(gl);
+    private class HelpDialog extends JDialog {
 
-        gl.setAutoCreateContainerGaps(true);
-        gl.setHorizontalGroup(gl.createParallelGroup()
-                .addComponent(arg[0])
-                .addComponent(arg[1])
-                .addComponent(arg[2])
-                .addComponent(arg[3])
-                .addComponent(arg[4])
-                .addComponent(arg[5])
-                .addComponent(arg[6])
-        );
+        HelpDialog(Frame parent) {
+            super(parent);
+            initHelpDialog();
+        }
 
-        gl.setVerticalGroup(gl.createSequentialGroup()
-                .addComponent(arg[0])
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(arg[1])
-                .addComponent(arg[2])
-                .addComponent(arg[3])
-                .addComponent(arg[4])
-                .addComponent(arg[5])
-                .addPreferredGap(RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(arg[6])
-        );
+        private void initHelpDialog() {
+            setTitle("Instructions");
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setLocation(getParent().getLocation());
+            setModalityType(ModalityType.APPLICATION_MODAL);
+
+            // Create a button and image.
+            JButton btn = new JButton("OK");
+            btn.addActionListener(event -> dispose());
+            ImageIcon instr = new ImageIcon("src/resources/instructions.png");
+            JLabel instructions = new JLabel(instr);
+
+            createLayout(instructions, btn);
+        }
+
+        private void createLayout(JLabel pic, JButton btn) {
+            Container pane = getContentPane();
+            GroupLayout gl = new GroupLayout(pane);
+            pane.setLayout(gl);
+
+            gl.setAutoCreateContainerGaps(true);
+            gl.setAutoCreateGaps(true);
+
+            gl.setHorizontalGroup(gl.createParallelGroup(CENTER)
+                    .addComponent(pic)
+                    .addComponent(btn)
+            );
+
+            gl.setVerticalGroup(gl.createSequentialGroup()
+                    .addComponent(pic)
+                    .addGap(20)
+                    .addComponent(btn)
+                    .addGap(20)
+            );
+            pack();
+        }
     }
 
-    @Override
-    public void itemStateChanged(ItemEvent e) {
+    private class SolutionDialog extends JDialog {
+        SolutionDialog(Frame parent) {
+            super(parent);
+            initSolutionDialog();
+        }
 
-        int sel = e.getStateChange();
-        if (sel == ItemEvent.SELECTED) {
-            JRadioButton button = (JRadioButton) e.getSource();
-            String text = button.getText();
-            //TODO: Changing the balls color.
+        private void initSolutionDialog() {
+            setTitle("Solution");
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setLocation(getParent().getLocation());
+            setModalityType(ModalityType.APPLICATION_MODAL);
+
+            // Create a button and image.
+            JButton btn = new JButton("OK");
+            btn.addActionListener(event -> dispose());
+
+            /* Get the correct solution picture */
+            //String fileName = "src/resources/solution"+board.getMap()+".png";
+            ImageIcon solutionPic = new ImageIcon("src/resources/solution"+board.getMap()+".png");
+
+            JLabel solution = new JLabel(solutionPic);
+
+            createLayout(solution, btn);
+        }
+
+        private void createLayout(JLabel pic, JButton btn) {
+            Container pane = getContentPane();
+            GroupLayout gl = new GroupLayout(pane);
+            pane.setLayout(gl);
+
+            gl.setAutoCreateContainerGaps(true);
+            gl.setAutoCreateGaps(true);
+
+            gl.setHorizontalGroup(gl.createParallelGroup(CENTER)
+                    .addComponent(pic)
+                    .addComponent(btn)
+            );
+
+            gl.setVerticalGroup(gl.createSequentialGroup()
+                    .addComponent(pic)
+                    .addGap(20)
+                    .addComponent(btn)
+                    .addGap(20)
+            );
+            pack();
         }
     }
 }
 
-class HelpDialog extends JDialog {
 
-    HelpDialog(Frame parent) {
-        super(parent);
-        initHelp();
-    }
-
-    private void initHelp() {
-        setTitle("Instructions");
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLocation(getParent().getLocation());
-        setModalityType(ModalityType.APPLICATION_MODAL);
-
-        // Create a button and image.
-        JButton btn = new JButton("OK");
-        btn.addActionListener(event -> dispose());
-        ImageIcon instr = new ImageIcon("src/resources/instructions.png");
-        JLabel instructions = new JLabel(instr);
-
-        createLayout(instructions, btn);
-    }
-
-    private void createLayout(JLabel pic, JButton btn) {
-        Container pane = getContentPane();
-        GroupLayout gl = new GroupLayout(pane);
-        pane.setLayout(gl);
-
-        gl.setAutoCreateContainerGaps(true);
-        gl.setAutoCreateGaps(true);
-
-        gl.setHorizontalGroup(gl.createParallelGroup(CENTER)
-                        .addComponent(pic)
-                        .addComponent(btn)
-                //.addGap(200)
-        );
-
-        gl.setVerticalGroup(gl.createSequentialGroup()
-                //.addGap(30)
-                .addComponent(pic)
-                .addGap(20)
-                .addComponent(btn)
-                .addGap(20)
-        );
-        pack();
-    }
-}
-
-class MapDialog extends JDialog {
-
-    MapDialog(Frame parent) {
-        super(parent);
-        initMapDialog();
-    }
-
-    private void initMapDialog(){
-        setTitle("Choosing the map");
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLocation(getParent().getLocation());
-        setModalityType(ModalityType.APPLICATION_MODAL);
-        setSize(300,300);
-        //TODO: Changing maps.
-    }
-}
