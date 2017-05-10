@@ -24,6 +24,7 @@ public class Board extends JPanel implements ActionListener {
     private boolean paused = false;
     private int blockSize = 25;
     private boolean goalReached = false;
+    private double[] highscore = {0.0, 0.0, 0.0, 0.0};
 
 
     Board() {
@@ -37,31 +38,40 @@ public class Board extends JPanel implements ActionListener {
         setFocusable(true);
         setBackground(Color.BLACK);
 
-        initVariables(1, false);
+        initVariables(1, "red", false);
     }
-    /* Initializing the variables used in Board class. */
-    public void initVariables(int mapNumber, boolean gameStarted) {
+    /* Initializing the variables used in Board class.
+     * Also used when changing the map.
+     * int mapNumber tells which map to initialize, boolean gameStarted tells if a prior game has been initialized before changing maps.*/
+    public void initVariables(int mapNumber, String ballColor, boolean gameStarted) {
 
         inGame = gameStarted;
         paused = false;
         map = new Map(mapNumber);
-        ball = new Ball();
+        ball = new Ball(ballColor);
         timer = new Timer(DELAY, this);
         timer.start();
         watch = new StopWatch();
     }
 
-    public void resetMap(){
-        initVariables(map.getCurrentMap(), true);
+    /* Resets current map to starting point. */
+    void resetMap(){
+        initVariables(map.getCurrentMap(), ball.getColor(), true);
         watch.start();
     }
 
+    /* Returns how much time has elapsed since beginning current map. */
     double getTime() {
         return ((watch.getTime()/1000 + (double)(watch.getTime()/10 - watch.getTime()/1000)) / 100);
     }
 
+    /* Returns the number of which map is currently going on. */
     int getMap() {
         return map.getCurrentMap();
+    }
+
+    double getHighscore(int map) {
+        return highscore[map];
     }
 
     // Painting components.
@@ -69,20 +79,24 @@ public class Board extends JPanel implements ActionListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         super.requestFocusInWindow();
+
+        /* If already in game, keep drawing the game. If not, then show starting screen */
         if (inGame) {
             if (watch.isSuspended()) {
                 watch.resume();
             }
+
             drawMap(g);
             drawBall(g);
-
             Toolkit.getDefaultToolkit().sync();
+
+            /* If paused, suspend the stopwatch and show pause screen. */
             if (paused) {
                 watch.suspend();
                 showScreen(g, true);
             }
 
-            // System.out.format("Balls coordinates: x = %d y = %d%n", ball.getX(), ball.getY() );
+            /* Check if goal is reached and end the game if so. */
             if (ball.getX() == 14 && ball.getY() == 14) {
                 goalReached = true;
                 System.out.println("GOAL REACHED");
@@ -95,9 +109,12 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void endGame() {
+        if ( getTime() > highscore[getMap()]) {
+            highscore[getMap()] = getTime();
+        }
+        System.out.format("Map "+getMap()+" highscore = "+highscore[getMap()]);
         watch.suspend();
         inGame = false;
-        System.out.format("Finish time: %s", getTime());
         // notifyObservers?
     }
 
@@ -107,12 +124,14 @@ public class Board extends JPanel implements ActionListener {
         ImageIcon ps = new ImageIcon("src/resources/pause.png");
         Image pause = ps.getImage();
         Image instructions = instr.getImage();
+        Image start = new ImageIcon("src/resources/start.png").getImage();
 
         if (paused) {
             g.drawImage(pause,0,100,this);
             timer.stop();
             System.out.println("Drawing 'Paused'");
-        } else {
+        }
+        else {
             g.drawImage(instructions,0,0,this);
         }
     }
@@ -194,11 +213,10 @@ public class Board extends JPanel implements ActionListener {
                     }
                 }
             } else {
-                if (key == KeyEvent.VK_S || key == KeyEvent.VK_ESCAPE) {
-                    inGame = true;
-                    watch.start();
-                    System.out.println("S pressed");
-                }
+                inGame = true;
+                watch.start();
+                System.out.println("Button pressed");
+
             }
         }
 

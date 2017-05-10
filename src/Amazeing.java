@@ -15,12 +15,17 @@ public class Amazeing extends JFrame {
     private int mazeSize = 25*16;
     private Board board;
     private JLabel time;
+    private JLabel map;
+    private JLabel highscore;
+    private int chosenMap = 1;
+    private String chosenBall = "red";
 
     private Amazeing() {
 
         initMenuBar();
         initUI();
         watch();
+        updateUI();
     }
     /* Initializing the menuBar. */
     private void initMenuBar() {
@@ -32,18 +37,19 @@ public class Amazeing extends JFrame {
         game.setMnemonic(KeyEvent.VK_A);
         help.setMnemonic(KeyEvent.VK_H);
 
-        /*Creating Reset menuItem. */
+        /* Creating Reset menuItem. */
         JMenuItem menuReset = new JMenuItem("Reset the map");
         menuReset.setMnemonic(KeyEvent.VK_R);
         menuReset.setToolTipText("Reset the ongoing map");
         menuReset.addActionListener(event -> board.resetMap());
 
+        /* Creating ChooseMap menuItem. */
         JMenuItem menuChooseMap = new JMenuItem("Choose map");
         menuChooseMap.setMnemonic(KeyEvent.VK_R);
         menuChooseMap.setToolTipText("Choose which map to play.");
         menuChooseMap.addActionListener(event -> showMap());
 
-        /*Creating Exit menuItem. */
+        /* Creating Exit menuItem. */
         JMenuItem menuExit= new JMenuItem("Exit");
         menuExit.setMnemonic(KeyEvent.VK_E);
         menuExit.setToolTipText("Exit application");
@@ -59,9 +65,7 @@ public class Amazeing extends JFrame {
         JMenuItem menuHighScore = new JMenuItem("Highscores");
         menuHighScore.setMnemonic(KeyEvent.VK_H);
         menuHighScore.setToolTipText("Show the highscores of the maps.");
-        menuHighScore.addActionListener(event -> {
-        // TODO: show highscore according to which map you're in.
-        });
+        menuHighScore.addActionListener(event -> showScores());
 
           /* Creating Settings menuItem. */
         JMenuItem menuSettings = new JMenuItem("Settings");
@@ -73,9 +77,7 @@ public class Amazeing extends JFrame {
         JMenuItem menuSolution = new JMenuItem("Solution");
         menuSolution.setMnemonic(KeyEvent.VK_O);
         menuSolution.setToolTipText("Show the solution to this map.");
-        menuSolution.addActionListener(event -> {
-            showSolution();
-        });
+        menuSolution.addActionListener(event -> showSolution());
 
         /* Adding Reset, Choose map, Highscore, Solution, Settings and Exit into Game, Instructions into Help, and adding them all into menuBar. */
         game.add(menuReset);
@@ -110,6 +112,11 @@ public class Amazeing extends JFrame {
     private void showMap() {
         MapDialog map = new MapDialog(this);
         map.setVisible(true);
+    }
+
+    private void showScores() {
+        ScoresDialog scores = new ScoresDialog(this);
+        scores.setVisible(true);
     }
 
     /* Initializing the UI. */
@@ -156,9 +163,11 @@ public class Amazeing extends JFrame {
         infoBox.setAlignmentX(1f);
         infoBox.setLayout(new BoxLayout(infoBox, BoxLayout.Y_AXIS));
         infoBox.setPreferredSize(new Dimension(130,50));
+        map = new JLabel();
+        highscore = new JLabel();
+        infoBox.add(highscore);
+        infoBox.add(map);
 
-        infoBox.add(new JLabel("Map: 1"));
-        infoBox.add(new JLabel("Highscore: "));
 
         /* Creating time label */
         time = new JLabel();
@@ -193,8 +202,17 @@ public class Amazeing extends JFrame {
                 time.setText("Time:" + board.getTime());
             }
         });
-
         watch.start();
+    }
+
+    private void updateUI () {
+        Thread update = new Thread(() -> {
+            while (true) {
+                map.setText("Map: "+board.getMap());
+                highscore.setText("Highscore: "+board.getHighscore(board.getMap()));
+            }
+        });
+        update.start();
     }
 
     /* -------------  Main  -------------------------------------- */
@@ -220,7 +238,10 @@ public class Amazeing extends JFrame {
             setModalityType(ModalityType.APPLICATION_MODAL);
 
             JButton btn = new JButton("OK");
-            btn.addActionListener(event -> dispose());
+            btn.addActionListener(event -> {
+                board.initVariables(chosenMap, chosenBall, true);
+                dispose();
+            });
 
             JLabel color = new JLabel("Choose your balls color:");
 
@@ -280,20 +301,15 @@ public class Amazeing extends JFrame {
 
         @Override
         public void itemStateChanged(ItemEvent e) {
-
             int selection = e.getStateChange();
             if (selection == ItemEvent.SELECTED) {
                 JRadioButton button = (JRadioButton) e.getSource();
-                String text = button.getText();
-                //TODO: Changing the balls color.
+                chosenBall = button.getText();
             }
         }
     }
 
-
     private class MapDialog extends JDialog implements ItemListener {
-
-        private int chosenMap = 1;
 
         MapDialog(Frame parent) {
             super(parent);
@@ -307,7 +323,7 @@ public class Amazeing extends JFrame {
             setModalityType(ModalityType.APPLICATION_MODAL);
             JButton btn = new JButton("OK");
             btn.addActionListener(event -> {
-                board.initVariables(chosenMap, true);
+                board.initVariables(chosenMap, chosenBall, true);
                 dispose();
             });
 
@@ -340,7 +356,6 @@ public class Amazeing extends JFrame {
             if (selection == ItemEvent.SELECTED) {
                 JRadioButton button = (JRadioButton) e.getSource();
                 chosenMap = Integer.parseInt(button.getText().substring(4, 5));
-                //System.out.println(chosenMap);
             }
         }
 
@@ -388,8 +403,7 @@ public class Amazeing extends JFrame {
             // Create a button and image.
             JButton btn = new JButton("OK");
             btn.addActionListener(event -> dispose());
-            ImageIcon instr = new ImageIcon("src/resources/instructions.png");
-            JLabel instructions = new JLabel(instr);
+            JLabel instructions = new JLabel(new ImageIcon("src/resources/instructions.png"));
 
             createLayout(instructions, btn);
         }
@@ -462,6 +476,20 @@ public class Amazeing extends JFrame {
                     .addGap(20)
             );
             pack();
+        }
+    }
+
+    private class ScoresDialog extends JDialog {
+        ScoresDialog(Frame parent) {
+            super(parent);
+            initScoresDialog();
+        }
+
+        private void initScoresDialog() {
+            setTitle("Highscores");
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setLocation(getParent().getLocation());
+            setModalityType(ModalityType.APPLICATION_MODAL);
         }
     }
 }

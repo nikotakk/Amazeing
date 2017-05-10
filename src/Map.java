@@ -41,11 +41,11 @@ public class Map {
     public Image getGoal() { return goal; }
 
     private void openFile(int number) {
-        String pathToMap = "src/resources/Map" + number + ".txt";
+        //String pathToMap = "src/resources/Map" + number + ".txt";
         try {
-            scanner = new Scanner(new File(pathToMap));
+            scanner = new Scanner(new File("src/resources/Map"+number+".txt"));
         } catch(Exception e) {
-            System.out.println("Error while loading the map");
+            System.out.println("Error while loading the map.");
         }
     }
 

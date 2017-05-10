@@ -9,18 +9,20 @@ public class Ball {
     private int tileX;
     private int tileY;
     private Image image;
+    private String color;
 
-    public Ball() {
+    public Ball(String ballColor) {
 
-        initBall();
+        initBall(ballColor);
     }
     // Initialize ball.
-    private void initBall() {
-
-        ImageIcon ii = new ImageIcon("src/resources/ball.png");
+    private void initBall(String ballColor) {
+        color = ballColor;
+        ImageIcon ii = new ImageIcon("src/resources/ball"+color+".png");
         image = ii.getImage();
         tileX = 1;
         tileY = 1;
+
     }
 
     // Move the ball.
@@ -40,6 +42,8 @@ public class Ball {
     public Image getImage() {
         return image;
     }
+
+    public String getColor() { return color; }
 
 
 }
