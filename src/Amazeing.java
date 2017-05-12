@@ -158,7 +158,7 @@ public class Amazeing extends JFrame {
         buttonsBox.add(right, gbc);
         //TODO: Move the ball when clicking the buttons.
 
-        /* Adding best time, current time and current lvl into the statusBar. */
+        /* Adding best time and current lvl into the statusBar. */
         JPanel infoBox = new JPanel();
         infoBox.setAlignmentX(1f);
         infoBox.setLayout(new BoxLayout(infoBox, BoxLayout.Y_AXIS));
@@ -243,6 +243,11 @@ public class Amazeing extends JFrame {
                 dispose();
             });
 
+            JButton cancel = new JButton("Cancel");
+            btn.addActionListener(event -> {
+                dispose();
+            });
+
             JLabel color = new JLabel("Choose your balls color:");
 
             ButtonGroup buttons = new ButtonGroup();
@@ -265,9 +270,9 @@ public class Amazeing extends JFrame {
             rb4.addItemListener(this);
             rb5.addItemListener(this);
 
-            createLayout(color, rb1, rb2, rb3, rb4, rb5, btn);
             setSize(350, 300);
-
+            setMinimumSize(new Dimension(200, 250));
+            createLayout(color, rb1, rb2, rb3, rb4, rb5, btn, cancel);
         }
 
         private void createLayout(JComponent... arg) {
@@ -283,7 +288,11 @@ public class Amazeing extends JFrame {
                     .addComponent(arg[3])
                     .addComponent(arg[4])
                     .addComponent(arg[5])
-                    .addComponent(arg[6])
+                    .addGroup(gl.createSequentialGroup()
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(arg[6])
+                            .addGap(20)
+                            .addComponent(arg[7]))
             );
 
             gl.setVerticalGroup(gl.createSequentialGroup()
@@ -295,7 +304,9 @@ public class Amazeing extends JFrame {
                     .addComponent(arg[4])
                     .addComponent(arg[5])
                     .addPreferredGap(RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(arg[6])
+                    .addGroup(gl.createParallelGroup()
+                            .addComponent(arg[6])
+                            .addComponent(arg[7]))
             );
         }
 
@@ -321,9 +332,15 @@ public class Amazeing extends JFrame {
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             setLocation(getParent().getLocation());
             setModalityType(ModalityType.APPLICATION_MODAL);
-            JButton btn = new JButton("OK");
-            btn.addActionListener(event -> {
+
+            JButton okBtn = new JButton("OK");
+            okBtn.addActionListener(event -> {
                 board.initVariables(chosenMap, chosenBall, true);
+                dispose();
+            });
+
+            JButton cancel = new JButton("Cancel");
+            cancel.addActionListener(event -> {
                 dispose();
             });
 
@@ -346,8 +363,10 @@ public class Amazeing extends JFrame {
             rb3.addItemListener(this);
             rb4.addItemListener(this);
 
-            createLayout(map, rb1, rb2, rb3, rb4, btn);
+            setMinimumSize(new Dimension(200,230));
             setSize(350, 300);
+
+            createLayout(map, rb1, rb2, rb3, rb4, okBtn, cancel);
         }
 
         @Override
@@ -365,13 +384,18 @@ public class Amazeing extends JFrame {
             pane.setLayout(gl);
 
             gl.setAutoCreateContainerGaps(true);
+            gl.setAutoCreateGaps(true);
             gl.setHorizontalGroup(gl.createParallelGroup()
                     .addComponent(arg[0])
                     .addComponent(arg[1])
                     .addComponent(arg[2])
                     .addComponent(arg[3])
                     .addComponent(arg[4])
-                    .addComponent(arg[5])
+                    .addGroup(gl.createSequentialGroup()
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(arg[5])
+                            .addGap(20)
+                            .addComponent(arg[6]))
             );
 
             gl.setVerticalGroup(gl.createSequentialGroup()
@@ -382,7 +406,9 @@ public class Amazeing extends JFrame {
                     .addComponent(arg[3])
                     .addComponent(arg[4])
                     .addPreferredGap(RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(arg[5])
+                    .addGroup(gl.createParallelGroup()
+                            .addComponent(arg[5])
+                            .addComponent(arg[6]))
             );
         }
     }
@@ -403,8 +429,8 @@ public class Amazeing extends JFrame {
             // Create a button and image.
             JButton btn = new JButton("OK");
             btn.addActionListener(event -> dispose());
-            JLabel instructions = new JLabel(new ImageIcon("src/resources/instructions.png"));
 
+            JLabel instructions = new JLabel(new ImageIcon("src/resources/instructions.png"));
             createLayout(instructions, btn);
         }
 
@@ -490,6 +516,30 @@ public class Amazeing extends JFrame {
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             setLocation(getParent().getLocation());
             setModalityType(ModalityType.APPLICATION_MODAL);
+
+            JButton btn = new JButton("OK");
+            btn.addActionListener(event -> dispose());
+
+            setMinimumSize(new Dimension(200,200));
+            setSize(250,350);
+
+            JPanel scores = new JPanel();
+            scores.setAlignmentX(1f);
+            scores.setLayout(new BoxLayout(scores, BoxLayout.Y_AXIS));
+            scores.setPreferredSize(new Dimension(130,50));
+
+            JLabel score1 = new JLabel("Map 1 highscore: "+board.getHighscore(1));
+            JLabel score2 = new JLabel("Map 2 highscore: "+board.getHighscore(2));
+            JLabel score3 = new JLabel("Map 3 highscore: "+board.getHighscore(3));
+            JLabel score4 = new JLabel("Map 4 highscore: "+board.getHighscore(4));
+
+            scores.add(Box.createRigidArea(new Dimension(5,5)));
+            scores.add(score1);
+            scores.add(score2);
+            scores.add(score3);
+            scores.add(score4);
+
+            add(scores);
         }
     }
 }

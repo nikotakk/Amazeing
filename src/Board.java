@@ -71,7 +71,7 @@ public class Board extends JPanel implements ActionListener {
     }
 
     double getHighscore(int map) {
-        return highscore[map];
+        return highscore[map-1];
     }
 
     // Painting components.
