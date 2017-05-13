@@ -40,8 +40,10 @@ public class Board extends JPanel implements ActionListener {
         initVariables(1, "punainen", false);
     }
     /* Initializing the variables used in Board class.
-     * Also used when changing the map.
-     * int mapNumber tells which map to initialize, boolean gameStarted tells if a prior game has been initialized before changing maps.*/
+      * Used at start and when the game needs to read new values, such as a new map or ball color.
+      * int mapNumber tells which map to initialize, ballColor tells what color ball to use
+      * boolean gameStarted tells if a prior game has been initialized before changing maps.
+      * */
     public void initVariables(int mapNumber, String ballColor, boolean gameStarted) {
         System.out.format("InitVariables: inGame = "+ inGame + ", now setting it to " + gameStarted + "\n");
         inGame = gameStarted;
@@ -70,24 +72,27 @@ public class Board extends JPanel implements ActionListener {
         return ((watch.getTime()/1000 + (double)(watch.getTime()/10 - watch.getTime()/1000)) / 100);
     }
 
-    /* Returns the number of which map is currently going on. */
+    /* Returns the number of map currently being played. */
     int getMap() {
         return map.getCurrentMap();
     }
 
+    /* Returns the value of highscore according to map number given as parameter. */
     double getHighscore(int map) {
         return highscore[map-1];
     }
 
+    /* Returns the value of goalReached. */
     boolean getGoalReached() {
         return goalReached;
     }
 
+    /* Sets goalReached to false. */
     void setGoalReachedFalse() {
         goalReached = false;
     }
 
-    // Painting components.
+    /* Paint map and ball. Also checks if goal has been reached. If so, call endGame(). */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -118,10 +123,9 @@ public class Board extends JPanel implements ActionListener {
         else {
                 showScreen(g, false);
         }
-
     }
 
-    // Drawing instructions or pause screen.
+    // Drawing instructions or pause screen .
     private void showScreen(Graphics g, boolean paused) {
         ImageIcon instr = new ImageIcon("src/resources/instructions.png");
         ImageIcon ps = new ImageIcon("src/resources/pause.png");
@@ -139,6 +143,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    /* Ends the game and updates highscore if its lower than current highscore. Sets goalReached = true.*/
     private void endGame() {
         inGame = false;
         goalReached = true;
@@ -149,13 +154,11 @@ public class Board extends JPanel implements ActionListener {
         else if ( getTime() < highscore[getMap()-1]) {
             highscore[getMap()-1] = getTime();
         }
-        //System.out.format("endGame(Board): Map " + getMap() + " highscore = " + highscore[getMap()-1] + "\n");
+
         if (watch.isStarted()) {
             watch.stop();
             System.out.format("endGame(Board): watch.isStarted() is true so stopping watch.\n");
         }
-
-        // notifyObservers?
     }
 
     // Drawing the balls graphics.
@@ -183,48 +186,44 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    /* When an action event has happened, repaint. */
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
     }
 
-    //Using keyboard, moving and collision checks.
+    //Moves the ball using keyboard. Also has collision checks.
     private class TAdapter extends KeyAdapter {
 
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
 
             if (inGame) {
-                //System.out.println("Input given while inGame.");
                 if ( (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) && timer.isRunning() ) {
                     if (!map.getMap(ball.getX() - 1, ball.getY()).equals("w")) {
                         ball.move(-1, 0);
                     }
-                    //System.out.println("Left or A pressed.");
                 }
 
                 if ( (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) && timer.isRunning() ) {
                     if (!map.getMap(ball.getX() + 1, ball.getY()).equals("w")) {
                         ball.move(1, 0);
                     }
-                    //System.out.println("Right or D pressed.");
                 }
 
                 if ( (key == KeyEvent.VK_UP || key == KeyEvent.VK_W ) && timer.isRunning() ) {
                     if (!map.getMap(ball.getX(), ball.getY() - 1).equals("w")) {
                         ball.move(0, -1);
                     }
-                    //System.out.println("Up or W pressed.");
                 }
 
                 if ( (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) && timer.isRunning() ) {
                     if (!map.getMap(ball.getX(), ball.getY() + 1).equals("w")) {
                         ball.move(0, 1);
                     }
-                    //System.out.println("Down or S pressed.");
                 }
+
                 if (key == KeyEvent.VK_ESCAPE) {
-                    //System.out.println("Esc pressed.");
                     if (timer.isRunning()) {
                         paused = true;
                         System.out.println("Setting 'paused' to True");

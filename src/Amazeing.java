@@ -25,11 +25,10 @@ public class Amazeing extends JFrame {
         initMenuBar();
         initUI();
         endGame();
-//        timeWatch();
         updateUI();
     }
 
-    /* Initializing the menuBar. */
+    /* Initializing the menuBar at the top of the window. */
     private void initMenuBar() {
 
         /* Creating a menuBar, to which menus Game and Help are added. */
@@ -172,47 +171,43 @@ public class Amazeing extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
+    /* Method that shows the solution for the current map. */
     private void showSolution() {
         SolutionDialog solution = new SolutionDialog(this);
         solution.setVisible(true);
     }
 
+    /* Method that shows the settings. */
     private void showSettings() {
         SettingsDialog settings = new SettingsDialog(this);
         settings.setVisible(true);
     }
 
+    /* Method that shows the help screen. */
     private void showHelp() {
         HelpDialog help = new HelpDialog(this);
         help.setVisible(true);
     }
 
+    /* Method that shows the map choosing dialog. */
     private void showMap() {
         MapDialog map = new MapDialog(this);
         map.setVisible(true);
     }
 
+    /* Method that shows the score screen. */
     private void showScores() {
         ScoresDialog scores = new ScoresDialog(this);
         scores.setVisible(true);
     }
 
+    /* Method that shows the end screen when you reach the goal. */
     private void showEnd() {
         EndDialog end = new EndDialog(this);
         end.setVisible(true);
     }
 
-//    /* The stopwatch used in the game. */
-//    private void timeWatch() {
-//        Thread watch = new Thread(() -> {
-//            while (true) {
-//
-//            }
-//        });
-//        watch.start();
-//    }
-
-    /* Updating the UI map and highscore texts. */
+    /* Updating the UI: map text, highscore texts and time text. */
     @SuppressWarnings("InfiniteLoopStatement")
     private void updateUI() {
         Thread update = new Thread(() -> {
@@ -225,12 +220,13 @@ public class Amazeing extends JFrame {
         update.start();
     }
 
+    /* Checks if goal has been reached in Board.java */
     @SuppressWarnings("InfiniteLoopStatement")
     private void endGame() {
         Thread end = new Thread(() -> {
             while (true) {
                 boolean isGoalReached = board.getGoalReached();
-                //System.out.println("endGame(AMAZEING): isGoalReached = " + isGoalReached);
+
                 if (isGoalReached) {
                     System.out.println("endGame(Amazeing): goalReached = "+ board.getGoalReached());
                     board.setGoalReachedFalse();
@@ -241,60 +237,73 @@ public class Amazeing extends JFrame {
         end.start();
     }
 
-    /* Nested classes */
+    /* ---------- Nested classes -------------------------------------- */
+    /* Class for settings dialog */
     private class SettingsDialog extends JDialog implements ItemListener {
         SettingsDialog(Frame parent) {
             super(parent);
             initSettingsDialog();
         }
 
+        /* Initialising the settings dialog */
         private void initSettingsDialog() {
             setTitle("Asetukset");
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             setLocation(getParent().getLocation());
             setModalityType(ModalityType.APPLICATION_MODAL);
 
+            /* OK Button, when pressed disposes of the settings dialog and initializes board with the chosen ball color*/
             JButton btn = new JButton("OK");
             btn.addActionListener(event -> {
-                board.initVariables(chosenMap, chosenBall.toLowerCase(), true);
+                board.initVariables(chosenMap, chosenBall, true);
                 dispose();
             });
 
+            /* Cancel Button, when pressed disposes of the settings dialog without making any chances. */
             JButton cancel = new JButton("Peruuta");
-            cancel.addActionListener(event -> dispose());
+            cancel.addActionListener(event -> {
+                dispose();
+            });
 
             JLabel color = new JLabel("Valitse pallosi väri:");
 
+            /* ButtonGroup for all the radio buttons. */
             ButtonGroup buttons = new ButtonGroup();
 
+            /* All the radio buttons, choices. */
             JRadioButton rb1 = new JRadioButton("Punainen", true);
             JRadioButton rb2 = new JRadioButton("Vihreä");
             JRadioButton rb3 = new JRadioButton("Sininen");
             JRadioButton rb4 = new JRadioButton("Keltainen");
             JRadioButton rb5 = new JRadioButton("Valkoinen");
 
+            /* Add the radiobuttons to the ButtonGroup. */
             buttons.add(rb1);
             buttons.add(rb2);
             buttons.add(rb3);
             buttons.add(rb4);
             buttons.add(rb5);
 
+            /* Add ItemListeners for the radio buttons. */
             rb1.addItemListener(this);
             rb2.addItemListener(this);
             rb3.addItemListener(this);
             rb4.addItemListener(this);
             rb5.addItemListener(this);
 
+            /* Modify the dialog and call createLayout(). */
             setSize(350, 300);
             setMinimumSize(new Dimension(200, 250));
             createLayout(color, rb1, rb2, rb3, rb4, rb5, btn, cancel);
         }
 
+        /* Create the layout for Settings dialog. */
         private void createLayout(JComponent... arg) {
             Container pane = getContentPane();
             GroupLayout gl = new GroupLayout(pane);
             pane.setLayout(gl);
 
+            /* Create a GroupLayout for the components in the UI. */
             gl.setAutoCreateContainerGaps(true);
             gl.setHorizontalGroup(gl.createParallelGroup()
                     .addComponent(arg[0])
@@ -325,6 +334,7 @@ public class Amazeing extends JFrame {
             );
         }
 
+        /* When a radio button is clicked, it inserts the radio buttons text as a chosen ball color. */
         @Override
         public void itemStateChanged(ItemEvent e) {
             int selection = e.getStateChange();
@@ -335,6 +345,7 @@ public class Amazeing extends JFrame {
         }
     }
 
+    /* Class for map dialog. */
     private class MapDialog extends JDialog implements ItemListener {
 
         MapDialog(Frame parent) {
@@ -342,35 +353,42 @@ public class Amazeing extends JFrame {
             initMapDialog();
         }
 
+        /* Initialising the map dialog. */
         private void initMapDialog() {
             setTitle("Kentän valinta");
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             setLocation(getParent().getLocation());
             setModalityType(ModalityType.APPLICATION_MODAL);
 
+            /* OK Button, when pressed calls initVariables with the chosen map. */
             JButton okBtn = new JButton("OK");
             okBtn.addActionListener(event -> {
                 board.initVariables(chosenMap, chosenBall, true);
                 dispose();
             });
 
+            /* Cancel button, calls dispose() */
             JButton cancel = new JButton("Peruuta");
             cancel.addActionListener(event -> dispose());
 
             JLabel map = new JLabel("Valitse kenttä jota pelata:");
 
+            /* ButtonGroup for all the radiobuttons. */
             ButtonGroup buttons = new ButtonGroup();
 
+            /* All  the radiobuttons. */
             JRadioButton rb1 = new JRadioButton("Kenttä 1", true);
             JRadioButton rb2 = new JRadioButton("Kenttä 2");
             JRadioButton rb3 = new JRadioButton("Kenttä 3");
             JRadioButton rb4 = new JRadioButton("Kenttä 4");
 
+            /* Add all the radiobuttons to the ButtonGroup. */
             buttons.add(rb1);
             buttons.add(rb2);
             buttons.add(rb3);
             buttons.add(rb4);
 
+            /* Add an ItemListener for all the radiobuttons. */
             rb1.addItemListener(this);
             rb2.addItemListener(this);
             rb3.addItemListener(this);
@@ -379,6 +397,7 @@ public class Amazeing extends JFrame {
             setMinimumSize(new Dimension(200, 230));
             setSize(350, 300);
 
+            /* Call createLayout with all the components. */
             createLayout(map, rb1, rb2, rb3, rb4, okBtn, cancel);
         }
 
@@ -391,11 +410,13 @@ public class Amazeing extends JFrame {
             }
         }
 
+        /* Creates the layout for the help dialog. */
         private void createLayout(JComponent... arg) {
             Container pane = getContentPane();
             GroupLayout gl = new GroupLayout(pane);
             pane.setLayout(gl);
 
+            /* Create a GroupLayout for all the components. */
             gl.setAutoCreateContainerGaps(true);
             gl.setAutoCreateGaps(true);
             gl.setHorizontalGroup(gl.createParallelGroup()
@@ -426,6 +447,7 @@ public class Amazeing extends JFrame {
         }
     }
 
+    /* Class for help dialog. */
     private class HelpDialog extends JDialog {
 
         HelpDialog(Frame parent) {
@@ -433,6 +455,7 @@ public class Amazeing extends JFrame {
             initHelpDialog();
         }
 
+        /* Initialise the help dialog. */
         private void initHelpDialog() {
             setTitle("Ohjeet");
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -442,11 +465,13 @@ public class Amazeing extends JFrame {
             // Create a button and image.
             JButton btn = new JButton("OK");
             btn.addActionListener(event -> dispose());
-
             JLabel instructions = new JLabel(new ImageIcon("src/resources/instructions.png"));
+
+            /* call createLayout with the components. */
             createLayout(instructions, btn);
         }
 
+        /* Create layout for the help dialog. */
         private void createLayout(JLabel pic, JButton btn) {
             Container pane = getContentPane();
             GroupLayout gl = new GroupLayout(pane);
@@ -470,31 +495,32 @@ public class Amazeing extends JFrame {
         }
     }
 
+    /* Class for solution dialog. */
     private class SolutionDialog extends JDialog {
         SolutionDialog(Frame parent) {
             super(parent);
             initSolutionDialog();
         }
 
+        /* Initialise the solution dialog. */
         private void initSolutionDialog() {
             setTitle("Ratkaisu");
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             setLocation(getParent().getLocation());
             setModalityType(ModalityType.APPLICATION_MODAL);
 
-            // Create a button and image.
+            // Create a OK button, which disposes of the solution dialog when pressed.
             JButton btn = new JButton("OK");
             btn.addActionListener(event -> dispose());
 
             /* Get the correct solution picture */
-            //String fileName = "src/resources/solution"+board.getMap()+".png";
-            ImageIcon solutionPic = new ImageIcon("src/resources/solution" + board.getMap() + ".png");
+            JLabel solution = new JLabel(new ImageIcon("src/resources/solution" + board.getMap() + ".png"));
 
-            JLabel solution = new JLabel(solutionPic);
-
+            /* call createLayout with the components. */
             createLayout(solution, btn);
         }
 
+        /* Create a layout for the solution dialog. */
         private void createLayout(JLabel pic, JButton btn) {
             Container pane = getContentPane();
             GroupLayout gl = new GroupLayout(pane);
@@ -518,29 +544,34 @@ public class Amazeing extends JFrame {
         }
     }
 
+    /* Class for score dialog. */
     private class ScoresDialog extends JDialog {
         ScoresDialog(Frame parent) {
             super(parent);
             initScoresDialog();
         }
 
+        /* Initialise the scores dialog. */
         private void initScoresDialog() {
             setTitle("Ennätykset");
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             setLocation(getParent().getLocation());
             setModalityType(ModalityType.APPLICATION_MODAL);
 
+            /* OK Button. */
             JButton btn = new JButton("OK");
             btn.addActionListener(event -> dispose());
 
             setMinimumSize(new Dimension(100, 180));
             setSize(150, 200);
 
+            /* Create a JPanel to store all the highscores. */
             JPanel scores = new JPanel();
             scores.setAlignmentX(1f);
             scores.setLayout(new BoxLayout(scores, BoxLayout.Y_AXIS));
             scores.setPreferredSize(new Dimension(130, 50));
 
+            /* Create JLabels to store the highscores for each map. */
             JLabel score1 = new JLabel("Kentän 1 ennätys: " + board.getHighscore(1));
             JLabel score2 = new JLabel("Kentän 2 ennätys: " + board.getHighscore(2));
             JLabel score3 = new JLabel("Kentän 3 ennätys: " + board.getHighscore(3));
@@ -548,6 +579,7 @@ public class Amazeing extends JFrame {
 
             Dimension gap = new Dimension(5, 5);
 
+            /* Add all the highscore JLabels to the scores JPanel. */
             scores.add(Box.createRigidArea(gap));
             scores.add(score1);
             scores.add(Box.createRigidArea(gap));
@@ -563,12 +595,14 @@ public class Amazeing extends JFrame {
         }
     }
 
+    /* Class for end dialog. */
     private class EndDialog extends JDialog {
         EndDialog(Frame parent) {
             super(parent);
             initEndDialog();
         }
 
+        /* Initialise the end dialog. */
         private void initEndDialog() {
             System.out.println("initEndDialog(): initializing the window.");
             setTitle("Kenttä läpi!");
@@ -576,17 +610,21 @@ public class Amazeing extends JFrame {
             setLocation(getParent().getLocation());
             setModalityType(ModalityType.APPLICATION_MODAL);
 
+            /* Create buttons for next map and choosing a map. Then create a JLabel for showing the time. */
             JButton next = new JButton("Seuraava kenttä");
             JButton newMap = new JButton("Kentän valinta");
-
             JLabel time = new JLabel("Aikasi: " + board.getTime());
 
             setSize(150,200);
+
+            /* call createLayout with the components created. */
             createLayout(time, newMap, next);
         }
 
+        /* Create the layout for end dialog. */
         private void createLayout(JLabel pic, JButton newMap, JButton next) {
 
+            /* Add ActionListeners to the buttons. */
             newMap.addActionListener(event -> {
                 showMap();
                 dispose();

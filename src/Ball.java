@@ -31,19 +31,23 @@ public class Ball {
         tileY += dy;
     }
 
+    /* Returns the int value of balls x coordinate. */
     public int getX() {
         return tileX;
     }
 
+    /* Returns the int value of balls y coordinate. */
     public int getY() {
         return tileY;
     }
 
-    public Image getImage() {
+    /* Returns the image of the ball. */
+    Image getImage() {
         return image;
     }
 
-    public String getColor() { return color; }
+    /* Returns the color of the ball. */
+    String getColor() { return color; }
 
 
 }

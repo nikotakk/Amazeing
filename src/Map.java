@@ -6,6 +6,7 @@ import java.io.*;
  * Created by nigel on 2/29/16.
  */
 public class Map {
+
     private Scanner scanner;
     private String Map[] = new String[16];
     private Image ground, wall, goal;
@@ -25,24 +26,30 @@ public class Map {
         closeFile();
     }
 
-    public int getCurrentMap() {
+    /* Returns the current map number. */
+    int getCurrentMap() {
         return currentMap;
     }
 
-    public String getMap(int x, int y) {
+    /* Returns the tile at the coordinates given as parameters. */
+    String getMap(int x, int y) {
         return Map[y].substring(x, x+1);
     }
 
-    public Image getGround() {
+    /* Returns the image of ground. */
+    Image getGround() {
         return ground;
     }
 
-    public Image getWall() {
+    /* Returns the image of wall. */
+    Image getWall() {
         return wall;
     }
 
-    public Image getGoal() { return goal; }
+    /* Returns the image of the goal. */
+    Image getGoal() { return goal; }
 
+    /* Opens the file at src/resources/ with the name of Map#.txt, where # is the number of map wanted to open. */
     private void openFile(int number) {
         try {
             scanner = new Scanner(new File("src/resources/Map"+number+".txt"));
@@ -51,6 +58,7 @@ public class Map {
         }
     }
 
+    /* Reads the file that has been opened and constructs the map variable from it. */
     private void readFile() {
         while(scanner.hasNext()) {
             for (int i = 0; i <16; i++) {
@@ -59,6 +67,7 @@ public class Map {
         }
     }
 
+    /* Closes the opened file. */
     private void closeFile() {
         scanner.close();
     }
