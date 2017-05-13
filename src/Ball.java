@@ -18,7 +18,7 @@ public class Ball {
     // Initialize ball.
     private void initBall(String ballColor) {
         color = ballColor;
-        ImageIcon ii = new ImageIcon("src/resources/ball"+color+".png");
+        ImageIcon ii = new ImageIcon("src/resources/pallo"+color+".png");
         image = ii.getImage();
         tileX = 1;
         tileY = 1;

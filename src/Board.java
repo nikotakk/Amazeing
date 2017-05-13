@@ -19,7 +19,6 @@ public class Board extends JPanel implements ActionListener {
     private Map map;
     private Ball ball;
     private StopWatch watch;
-    private final int DELAY = 10;
     private boolean inGame = false;
     private boolean paused = false;
     private int blockSize = 25;
@@ -38,7 +37,7 @@ public class Board extends JPanel implements ActionListener {
         setFocusable(true);
         setBackground(Color.BLACK);
 
-        initVariables(1, "red", false);
+        initVariables(1, "punainen", false);
     }
     /* Initializing the variables used in Board class.
      * Also used when changing the map.
@@ -49,7 +48,7 @@ public class Board extends JPanel implements ActionListener {
         paused = false;
         map = new Map(mapNumber);
         ball = new Ball(ballColor);
-        timer = new Timer(DELAY, this);
+        timer = new Timer(10, this);
         timer.start();
         watch = new StopWatch();
        if (inGame) {
@@ -60,7 +59,10 @@ public class Board extends JPanel implements ActionListener {
     /* Resets current map to starting point. */
     void resetMap(){
         initVariables(map.getCurrentMap(), ball.getColor(), true);
-        watch.start();
+
+        if (watch.isStopped()) {
+            watch.start();
+        }
     }
 
     /* Returns how much time has elapsed since beginning current map. */
@@ -140,7 +142,7 @@ public class Board extends JPanel implements ActionListener {
     private void endGame() {
         inGame = false;
         goalReached = true;
-        System.out.println("endGame(Board): watch.isStarted() = " + watch.isStarted() + ", setting inGame to false.");
+        System.out.println("endGame(Board): setting inGame to false.");
         if ( highscore[getMap()-1] == 0.0 ) {
             highscore[getMap()-1] = getTime();
         }
@@ -150,7 +152,7 @@ public class Board extends JPanel implements ActionListener {
         //System.out.format("endGame(Board): Map " + getMap() + " highscore = " + highscore[getMap()-1] + "\n");
         if (watch.isStarted()) {
             watch.stop();
-            System.out.format("endGame(Board): watch.isStarted was true so stopping watch.\n");
+            System.out.format("endGame(Board): watch.isStarted() is true so stopping watch.\n");
         }
 
         // notifyObservers?
@@ -239,23 +241,9 @@ public class Board extends JPanel implements ActionListener {
                     watch.reset();
                     watch.start();
                     System.out.print(", starting the Watch.\n");
+                    initVariables(getMap(), ball.getColor(), true);
                 }
-
-
             }
         }
-
-    /*    public void keyReleased(KeyEvent e) {
-
-            int key = e.getKeyCode();
-
-            if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A
-                    || key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S
-                    || key == KeyEvent.VK_UP || key == KeyEvent.VK_W
-                    || key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
-                ball.move(0,0);
-            }
-
-        }*/
     }
 }

@@ -18,16 +18,15 @@ public class Amazeing extends JFrame {
     private JLabel map;
     private JLabel highscore;
     private int chosenMap = 1;
-    private String chosenBall = "red";
+    private String chosenBall = "punainen";
 
     private Amazeing() {
 
         initMenuBar();
         initUI();
         endGame();
-        watch();
+//        timeWatch();
         updateUI();
-
     }
 
     /* Initializing the menuBar. */
@@ -95,37 +94,6 @@ public class Amazeing extends JFrame {
         menuBar.add(game);
         menuBar.add(help);
         setJMenuBar(menuBar);
-    }
-
-    private void showSolution() {
-        SolutionDialog solution = new SolutionDialog(this);
-        solution.setVisible(true);
-    }
-
-    private void showSettings() {
-        SettingsDialog settings = new SettingsDialog(this);
-        settings.setVisible(true);
-    }
-
-    private void showHelp() {
-        HelpDialog help = new HelpDialog(this);
-        help.setVisible(true);
-    }
-
-    private void showMap() {
-        MapDialog map = new MapDialog(this);
-        map.setVisible(true);
-    }
-
-    private void showScores() {
-        ScoresDialog scores = new ScoresDialog(this);
-        scores.setVisible(true);
-    }
-
-    private void showEnd() {
-        System.out.println("Showing end.");
-        EndDialog end = new EndDialog(this);
-        end.setVisible(true);
     }
 
     /* Initializing the UI. */
@@ -204,27 +172,60 @@ public class Amazeing extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
-    /* The stopwatch to be used in the game. */
-    private void watch() {
-        Thread watch = new Thread(() -> {
-            while (true) {
-                time.setText("Aika: " + board.getTime());
-            }
-        });
-        watch.start();
+    private void showSolution() {
+        SolutionDialog solution = new SolutionDialog(this);
+        solution.setVisible(true);
     }
 
+    private void showSettings() {
+        SettingsDialog settings = new SettingsDialog(this);
+        settings.setVisible(true);
+    }
+
+    private void showHelp() {
+        HelpDialog help = new HelpDialog(this);
+        help.setVisible(true);
+    }
+
+    private void showMap() {
+        MapDialog map = new MapDialog(this);
+        map.setVisible(true);
+    }
+
+    private void showScores() {
+        ScoresDialog scores = new ScoresDialog(this);
+        scores.setVisible(true);
+    }
+
+    private void showEnd() {
+        EndDialog end = new EndDialog(this);
+        end.setVisible(true);
+    }
+
+//    /* The stopwatch used in the game. */
+//    private void timeWatch() {
+//        Thread watch = new Thread(() -> {
+//            while (true) {
+//
+//            }
+//        });
+//        watch.start();
+//    }
+
     /* Updating the UI map and highscore texts. */
+    @SuppressWarnings("InfiniteLoopStatement")
     private void updateUI() {
         Thread update = new Thread(() -> {
             while (true) {
                 map.setText("Kenttä: " + board.getMap());
                 highscore.setText("Ennätys: " + board.getHighscore(board.getMap()));
+                time.setText("Aika: " + board.getTime());
             }
         });
         update.start();
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     private void endGame() {
         Thread end = new Thread(() -> {
             while (true) {
@@ -238,16 +239,6 @@ public class Amazeing extends JFrame {
             }
         });
         end.start();
-    }
-
-    /* -------------  Main  -------------------------------------- */
-    public static void main(String[] args) {
-
-        EventQueue.invokeLater(() -> {
-
-            Amazeing game = new Amazeing();
-            game.setVisible(true);
-        });
     }
 
     /* Nested classes */
@@ -265,24 +256,22 @@ public class Amazeing extends JFrame {
 
             JButton btn = new JButton("OK");
             btn.addActionListener(event -> {
-                board.initVariables(chosenMap, chosenBall, true);
+                board.initVariables(chosenMap, chosenBall.toLowerCase(), true);
                 dispose();
             });
 
             JButton cancel = new JButton("Peruuta");
-            btn.addActionListener(event -> {
-                dispose();
-            });
+            cancel.addActionListener(event -> dispose());
 
             JLabel color = new JLabel("Valitse pallosi väri:");
 
             ButtonGroup buttons = new ButtonGroup();
 
-            JRadioButton rb1 = new JRadioButton("Red", true);
-            JRadioButton rb2 = new JRadioButton("Green");
-            JRadioButton rb3 = new JRadioButton("Blue");
-            JRadioButton rb4 = new JRadioButton("Yellow");
-            JRadioButton rb5 = new JRadioButton("White");
+            JRadioButton rb1 = new JRadioButton("Punainen", true);
+            JRadioButton rb2 = new JRadioButton("Vihreä");
+            JRadioButton rb3 = new JRadioButton("Sininen");
+            JRadioButton rb4 = new JRadioButton("Keltainen");
+            JRadioButton rb5 = new JRadioButton("Valkoinen");
 
             buttons.add(rb1);
             buttons.add(rb2);
@@ -341,7 +330,7 @@ public class Amazeing extends JFrame {
             int selection = e.getStateChange();
             if (selection == ItemEvent.SELECTED) {
                 JRadioButton button = (JRadioButton) e.getSource();
-                chosenBall = button.getText();
+                chosenBall = button.getText().toLowerCase();
             }
         }
     }
@@ -544,8 +533,8 @@ public class Amazeing extends JFrame {
             JButton btn = new JButton("OK");
             btn.addActionListener(event -> dispose());
 
-            setMinimumSize(new Dimension(200, 200));
-            setSize(250, 350);
+            setMinimumSize(new Dimension(100, 180));
+            setSize(150, 200);
 
             JPanel scores = new JPanel();
             scores.setAlignmentX(1f);
@@ -557,11 +546,18 @@ public class Amazeing extends JFrame {
             JLabel score3 = new JLabel("Kentän 3 ennätys: " + board.getHighscore(3));
             JLabel score4 = new JLabel("Kentän 4 ennätys: " + board.getHighscore(4));
 
-            scores.add(Box.createRigidArea(new Dimension(5, 5)));
+            Dimension gap = new Dimension(5, 5);
+
+            scores.add(Box.createRigidArea(gap));
             scores.add(score1);
+            scores.add(Box.createRigidArea(gap));
             scores.add(score2);
+            scores.add(Box.createRigidArea(gap));
             scores.add(score3);
+            scores.add(Box.createRigidArea(gap));
             scores.add(score4);
+            scores.add(Box.createRigidArea(new Dimension(5, 20)));
+            scores.add(btn);
 
             add(scores);
         }
@@ -580,9 +576,67 @@ public class Amazeing extends JFrame {
             setLocation(getParent().getLocation());
             setModalityType(ModalityType.APPLICATION_MODAL);
 
-            setSize(150,200);
+            JButton next = new JButton("Seuraava kenttä");
+            JButton newMap = new JButton("Kentän valinta");
 
+            JLabel time = new JLabel("Aikasi: " + board.getTime());
+
+            setSize(150,200);
+            createLayout(time, newMap, next);
         }
+
+        private void createLayout(JLabel pic, JButton newMap, JButton next) {
+
+            newMap.addActionListener(event -> {
+                showMap();
+                dispose();
+            });
+            next.addActionListener(event -> {
+                int nextMap = board.getMap() + 1;
+                if (board.getMap() == 4) {
+                    nextMap = 1;
+                }
+                board.initVariables(nextMap, chosenBall, true);
+                dispose();
+            });
+
+            Container pane = getContentPane();
+            GroupLayout gl = new GroupLayout(pane);
+            pane.setLayout(gl);
+
+            gl.setAutoCreateContainerGaps(true);
+            gl.setAutoCreateGaps(true);
+
+            gl.setHorizontalGroup(gl.createParallelGroup(CENTER)
+                    .addComponent(pic)
+                    .addGroup(gl.createSequentialGroup()
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(newMap)
+                            .addGap(20)
+                            .addComponent(next))
+            );
+
+            gl.setVerticalGroup(gl.createSequentialGroup()
+                    .addComponent(pic)
+                    .addGap(20)
+                    .addPreferredGap(RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(gl.createParallelGroup()
+                            .addComponent(newMap)
+                            .addComponent(next))
+                    .addGap(20)
+            );
+            pack();
+        }
+    }
+
+    /* -------------  Main  -------------------------------------- */
+    public static void main(String[] args) {
+
+        EventQueue.invokeLater(() -> {
+
+            Amazeing game = new Amazeing();
+            game.setVisible(true);
+        });
     }
 }
 
