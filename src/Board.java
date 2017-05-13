@@ -44,7 +44,7 @@ public class Board extends JPanel implements ActionListener {
      * Also used when changing the map.
      * int mapNumber tells which map to initialize, boolean gameStarted tells if a prior game has been initialized before changing maps.*/
     public void initVariables(int mapNumber, String ballColor, boolean gameStarted) {
-
+        System.out.format("InitVariables: inGame = "+ inGame + ", now setting it to " + gameStarted + "\n");
         inGame = gameStarted;
         paused = false;
         map = new Map(mapNumber);
@@ -52,6 +52,9 @@ public class Board extends JPanel implements ActionListener {
         timer = new Timer(DELAY, this);
         timer.start();
         watch = new StopWatch();
+       if (inGame) {
+           watch.start();
+       }
     }
 
     /* Resets current map to starting point. */
@@ -72,6 +75,14 @@ public class Board extends JPanel implements ActionListener {
 
     double getHighscore(int map) {
         return highscore[map-1];
+    }
+
+    boolean getGoalReached() {
+        return goalReached;
+    }
+
+    void setGoalReachedFalse() {
+        goalReached = false;
     }
 
     // Painting components.
@@ -99,23 +110,13 @@ public class Board extends JPanel implements ActionListener {
             /* Check if goal is reached and end the game if so. */
             if (ball.getX() == 14 && ball.getY() == 14) {
                 goalReached = true;
-                System.out.println("GOAL REACHED");
                 endGame();
             }
         }
         else {
-            showScreen(g, false);
+                showScreen(g, false);
         }
-    }
 
-    private void endGame() {
-        if ( getTime() > highscore[getMap()]) {
-            highscore[getMap()] = getTime();
-        }
-        System.out.format("Map "+getMap()+" highscore = "+highscore[getMap()]);
-        watch.suspend();
-        inGame = false;
-        // notifyObservers?
     }
 
     // Drawing instructions or pause screen.
@@ -136,12 +137,32 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    private void endGame() {
+        inGame = false;
+        goalReached = true;
+        System.out.println("endGame(Board): watch.isStarted() = " + watch.isStarted() + ", setting inGame to false.");
+        if ( highscore[getMap()-1] == 0.0 ) {
+            highscore[getMap()-1] = getTime();
+        }
+        else if ( getTime() < highscore[getMap()-1]) {
+            highscore[getMap()-1] = getTime();
+        }
+        //System.out.format("endGame(Board): Map " + getMap() + " highscore = " + highscore[getMap()-1] + "\n");
+        if (watch.isStarted()) {
+            watch.stop();
+            System.out.format("endGame(Board): watch.isStarted was true so stopping watch.\n");
+        }
+
+        // notifyObservers?
+    }
+
     // Drawing the balls graphics.
     private void drawBall(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(ball.getImage(), ball.getX() * blockSize, ball.getY() * blockSize, this);
     }
+
     // Drawing the maps graphics.
     private void drawMap(Graphics g) {
 
@@ -169,40 +190,39 @@ public class Board extends JPanel implements ActionListener {
     private class TAdapter extends KeyAdapter {
 
         public void keyPressed(KeyEvent e) {
-            System.out.println("Input given: ");
             int key = e.getKeyCode();
 
             if (inGame) {
-
+                //System.out.println("Input given while inGame.");
                 if ( (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) && timer.isRunning() ) {
                     if (!map.getMap(ball.getX() - 1, ball.getY()).equals("w")) {
                         ball.move(-1, 0);
                     }
-                    System.out.println("Left or A pressed.");
+                    //System.out.println("Left or A pressed.");
                 }
 
                 if ( (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) && timer.isRunning() ) {
                     if (!map.getMap(ball.getX() + 1, ball.getY()).equals("w")) {
                         ball.move(1, 0);
                     }
-                    System.out.println("Right or D pressed.");
+                    //System.out.println("Right or D pressed.");
                 }
 
                 if ( (key == KeyEvent.VK_UP || key == KeyEvent.VK_W ) && timer.isRunning() ) {
                     if (!map.getMap(ball.getX(), ball.getY() - 1).equals("w")) {
                         ball.move(0, -1);
                     }
-                    System.out.println("Up or W pressed.");
+                    //System.out.println("Up or W pressed.");
                 }
 
                 if ( (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) && timer.isRunning() ) {
                     if (!map.getMap(ball.getX(), ball.getY() + 1).equals("w")) {
                         ball.move(0, 1);
                     }
-                    System.out.println("Down or S pressed.");
+                    //System.out.println("Down or S pressed.");
                 }
                 if (key == KeyEvent.VK_ESCAPE) {
-                    System.out.println("Esc pressed.");
+                    //System.out.println("Esc pressed.");
                     if (timer.isRunning()) {
                         paused = true;
                         System.out.println("Setting 'paused' to True");
@@ -213,9 +233,14 @@ public class Board extends JPanel implements ActionListener {
                     }
                 }
             } else {
+                System.out.format("keyPressed: Setting inGame to True. Watch.isStarted = false");
                 inGame = true;
-                watch.start();
-                System.out.println("Button pressed");
+                if (!watch.isStarted()) {
+                    watch.reset();
+                    watch.start();
+                    System.out.print(", starting the Watch.\n");
+                }
+
 
             }
         }
