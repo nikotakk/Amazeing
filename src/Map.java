@@ -13,12 +13,9 @@ public class Map {
     private int currentMap;
 
     public Map(int mapNumber) {
-        ImageIcon image = new ImageIcon("src/resources/ground.png");
-        ground = image.getImage();
-        image = new ImageIcon("src/resources/wall.png");
-        wall = image.getImage();
-        image = new ImageIcon("src/resources/goal.png");
-        goal = image.getImage();
+        ground = new ImageIcon("src/resources/ground.png").getImage();
+        wall = new ImageIcon("src/resources/wall.png").getImage();
+        goal = new ImageIcon("src/resources/goal.png").getImage();
         currentMap = mapNumber;
 
         openFile(currentMap);

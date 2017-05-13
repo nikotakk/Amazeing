@@ -24,8 +24,8 @@ public class Amazeing extends JFrame {
 
         initMenuBar();
         initUI();
-        endGame();
         updateUI();
+        endGame();
     }
 
     /* Initializing the menuBar at the top of the window. */
@@ -57,7 +57,7 @@ public class Amazeing extends JFrame {
         menuExit.addActionListener(event -> System.exit(0));
 
         /* Creating Instructions menuItem. */
-        JMenuItem menuInstructions = new JMenuItem("Ohjeet");
+        JMenuItem menuInstructions = new JMenuItem("Ohje");
         menuInstructions.setMnemonic(KeyEvent.VK_I);
         menuInstructions.setToolTipText("Näytä ohjeet kuinka peliä pelataan");
         menuInstructions.addActionListener(event -> showHelp());
@@ -91,7 +91,8 @@ public class Amazeing extends JFrame {
         game.add(menuExit);
         help.add(menuInstructions);
         menuBar.add(game);
-        menuBar.add(help);
+        menuBar.add(menuInstructions);
+        //menuBar.add(help);
         setJMenuBar(menuBar);
     }
 
@@ -105,34 +106,33 @@ public class Amazeing extends JFrame {
         statusBar.setBackground(Color.LIGHT_GRAY);
         statusBar.setBorder(LineBorder.createBlackLineBorder());
 
-        /* Creating a box of buttons to be put into the statusBar. */
-        JPanel buttonsBox = new JPanel();
-        buttonsBox.setLayout(new GridBagLayout());
-        JButton up = new JButton("^");
-        JButton left = new JButton("<");
-        JButton down = new JButton("v");
-        JButton right = new JButton(">");
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        up.addActionListener(event -> System.out.println("Up-key clicked."));
-        left.addActionListener(event -> System.out.println("Left-key clicked."));
-        down.addActionListener(event -> System.out.println("Down-key clicked."));
-        right.addActionListener(event -> System.out.println("Right-key clicked."));
-
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        buttonsBox.add(up, gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        buttonsBox.add(down, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        buttonsBox.add(left, gbc);
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-        buttonsBox.add(right, gbc);
-        //TODO: Move the ball when clicking the buttons.
+//        /* Creating a box of buttons to be put into the statusBar. */
+//        JPanel buttonsBox = new JPanel();
+//        buttonsBox.setLayout(new GridBagLayout());
+//        JButton up = new JButton("^");
+//        JButton left = new JButton("<");
+//        JButton down = new JButton("v");
+//        JButton right = new JButton(">");
+//        GridBagConstraints gbc = new GridBagConstraints();
+//
+//        up.addActionListener(event -> System.out.println("Up-key clicked."));
+//        left.addActionListener(event -> System.out.println("Left-key clicked."));
+//        down.addActionListener(event -> System.out.println("Down-key clicked."));
+//        right.addActionListener(event -> System.out.println("Right-key clicked."));
+//
+//        gbc.fill = GridBagConstraints.HORIZONTAL;
+//        gbc.gridx = 1;
+//        gbc.gridy = 0;
+//        buttonsBox.add(up, gbc);
+//        gbc.gridx = 1;
+//        gbc.gridy = 1;
+//        buttonsBox.add(down, gbc);
+//        gbc.gridx = 0;
+//        gbc.gridy = 1;
+//        buttonsBox.add(left, gbc);
+//        gbc.gridx = 2;
+//        gbc.gridy = 1;
+//        buttonsBox.add(right, gbc);
 
         /* Adding best time and current lvl into the statusBar. */
         JPanel infoBox = new JPanel();
@@ -152,8 +152,9 @@ public class Amazeing extends JFrame {
         /* Adding infobox, time and buttonsbox into statusBar. */
         statusBar.add(Box.createRigidArea(new Dimension(5, 0)));
         statusBar.add(infoBox);
+        statusBar.add(Box.createRigidArea(new Dimension(150, 0)));
         statusBar.add(time);
-        statusBar.add(buttonsBox);
+        //statusBar.add(buttonsBox);
 
         /* Adding statusbar to the south of the window. */
         add(statusBar, BorderLayout.SOUTH);
@@ -225,10 +226,8 @@ public class Amazeing extends JFrame {
     private void endGame() {
         Thread end = new Thread(() -> {
             while (true) {
-                boolean isGoalReached = board.getGoalReached();
-
-                if (isGoalReached) {
-                    System.out.println("endGame(Amazeing): goalReached = "+ board.getGoalReached());
+                if (board.getGoalReached()) {
+                    System.out.println("endGame(): goalReached = "+ board.getGoalReached());
                     board.setGoalReachedFalse();
                     showEnd();
                 }
@@ -261,9 +260,7 @@ public class Amazeing extends JFrame {
 
             /* Cancel Button, when pressed disposes of the settings dialog without making any chances. */
             JButton cancel = new JButton("Peruuta");
-            cancel.addActionListener(event -> {
-                dispose();
-            });
+            cancel.addActionListener(event -> dispose());
 
             JLabel color = new JLabel("Valitse pallosi väri:");
 

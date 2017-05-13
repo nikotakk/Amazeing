@@ -18,11 +18,9 @@ public class Ball {
     // Initialize ball.
     private void initBall(String ballColor) {
         color = ballColor;
-        ImageIcon ii = new ImageIcon("src/resources/pallo"+color+".png");
-        image = ii.getImage();
+        image = new ImageIcon("src/resources/pallo"+color+".png").getImage();
         tileX = 1;
         tileY = 1;
-
     }
 
     // Move the ball.

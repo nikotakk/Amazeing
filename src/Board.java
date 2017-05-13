@@ -22,7 +22,7 @@ public class Board extends JPanel implements ActionListener {
     private boolean inGame = false;
     private boolean paused = false;
     private int blockSize = 25;
-    private boolean goalReached = false;
+    private volatile boolean goalReached = false;
     private double[] highscore = {0.0, 0.0, 0.0, 0.0};
 
 
@@ -44,8 +44,8 @@ public class Board extends JPanel implements ActionListener {
       * int mapNumber tells which map to initialize, ballColor tells what color ball to use
       * boolean gameStarted tells if a prior game has been initialized before changing maps.
       * */
-    public void initVariables(int mapNumber, String ballColor, boolean gameStarted) {
-        System.out.format("InitVariables: inGame = "+ inGame + ", now setting it to " + gameStarted + "\n");
+    void initVariables(int mapNumber, String ballColor, boolean gameStarted) {
+        //System.out.format("InitVariables: inGame = "+ inGame + ", now setting it to " + gameStarted + "\n");
         inGame = gameStarted;
         paused = false;
         map = new Map(mapNumber);
@@ -127,11 +127,8 @@ public class Board extends JPanel implements ActionListener {
 
     // Drawing instructions or pause screen .
     private void showScreen(Graphics g, boolean paused) {
-        ImageIcon instr = new ImageIcon("src/resources/instructions.png");
-        ImageIcon ps = new ImageIcon("src/resources/pause.png");
-        Image pause = ps.getImage();
-        Image instructions = instr.getImage();
-        Image start = new ImageIcon("src/resources/start.png").getImage();
+        Image pause = new ImageIcon("src/resources/pause.png").getImage();
+        Image instructions = new ImageIcon("src/resources/instructions.png").getImage();
 
         if (paused) {
             g.drawImage(pause,0,100,this);
