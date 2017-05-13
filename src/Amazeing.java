@@ -12,7 +12,7 @@ import static javax.swing.LayoutStyle.ComponentPlacement.RELATED;
 public class Amazeing extends JFrame {
 
     private int movebarHeight = 70;
-    private int mazeSize = 25*16;
+    private int mazeSize = 25 * 16;
     private Board board;
     private JLabel time;
     private JLabel map;
@@ -24,59 +24,62 @@ public class Amazeing extends JFrame {
 
         initMenuBar();
         initUI();
+        endGame();
         watch();
         updateUI();
+
     }
+
     /* Initializing the menuBar. */
     private void initMenuBar() {
 
         /* Creating a menuBar, to which menus Game and Help are added. */
         JMenuBar menuBar = new JMenuBar();
-        JMenu game = new JMenu("Game");
-        JMenu help = new JMenu("Help");
-        game.setMnemonic(KeyEvent.VK_A);
+        JMenu game = new JMenu("Peli");
+        JMenu help = new JMenu("Ohje");
+        game.setMnemonic(KeyEvent.VK_E);
         help.setMnemonic(KeyEvent.VK_H);
 
         /* Creating Reset menuItem. */
-        JMenuItem menuReset = new JMenuItem("Reset the map");
+        JMenuItem menuReset = new JMenuItem("Resetoi kenttä");
         menuReset.setMnemonic(KeyEvent.VK_R);
-        menuReset.setToolTipText("Reset the ongoing map");
+        menuReset.setToolTipText("Resetoi meneillä oleva kenttä");
         menuReset.addActionListener(event -> board.resetMap());
 
         /* Creating ChooseMap menuItem. */
-        JMenuItem menuChooseMap = new JMenuItem("Choose map");
+        JMenuItem menuChooseMap = new JMenuItem("Kentän valinta");
         menuChooseMap.setMnemonic(KeyEvent.VK_R);
-        menuChooseMap.setToolTipText("Choose which map to play.");
+        menuChooseMap.setToolTipText("Valitse mitä kenttää pelata");
         menuChooseMap.addActionListener(event -> showMap());
 
         /* Creating Exit menuItem. */
-        JMenuItem menuExit= new JMenuItem("Exit");
+        JMenuItem menuExit = new JMenuItem("Sulje");
         menuExit.setMnemonic(KeyEvent.VK_E);
-        menuExit.setToolTipText("Exit application");
+        menuExit.setToolTipText("Sulje sovellus");
         menuExit.addActionListener(event -> System.exit(0));
 
         /* Creating Instructions menuItem. */
-        JMenuItem menuInstructions = new JMenuItem("Show instructions");
+        JMenuItem menuInstructions = new JMenuItem("Ohjeet");
         menuInstructions.setMnemonic(KeyEvent.VK_I);
-        menuInstructions.setToolTipText("Show the instructions to play the game");
+        menuInstructions.setToolTipText("Näytä ohjeet kuinka peliä pelataan");
         menuInstructions.addActionListener(event -> showHelp());
 
         /* Creating highScore menuItem. */
-        JMenuItem menuHighScore = new JMenuItem("Highscores");
+        JMenuItem menuHighScore = new JMenuItem("Ennätykset");
         menuHighScore.setMnemonic(KeyEvent.VK_H);
-        menuHighScore.setToolTipText("Show the highscores of the maps.");
+        menuHighScore.setToolTipText("Näytä eri kenttien ennätykset");
         menuHighScore.addActionListener(event -> showScores());
 
           /* Creating Settings menuItem. */
-        JMenuItem menuSettings = new JMenuItem("Settings");
+        JMenuItem menuSettings = new JMenuItem("Asetukset");
         menuSettings.setMnemonic(KeyEvent.VK_S);
-        menuSettings.setToolTipText("Show the settings.");
+        menuSettings.setToolTipText("Näytä asetukset.");
         menuSettings.addActionListener(event -> showSettings());
 
         /* Creating Solution menuItem. */
-        JMenuItem menuSolution = new JMenuItem("Solution");
+        JMenuItem menuSolution = new JMenuItem("Ratkaisu");
         menuSolution.setMnemonic(KeyEvent.VK_O);
-        menuSolution.setToolTipText("Show the solution to this map.");
+        menuSolution.setToolTipText("Näytä tämän kentän ratkaisu");
         menuSolution.addActionListener(event -> showSolution());
 
         /* Adding Reset, Choose map, Highscore, Solution, Settings and Exit into Game, Instructions into Help, and adding them all into menuBar. */
@@ -117,6 +120,12 @@ public class Amazeing extends JFrame {
     private void showScores() {
         ScoresDialog scores = new ScoresDialog(this);
         scores.setVisible(true);
+    }
+
+    private void showEnd() {
+        System.out.println("Showing end.");
+        EndDialog end = new EndDialog(this);
+        end.setVisible(true);
     }
 
     /* Initializing the UI. */
@@ -162,7 +171,7 @@ public class Amazeing extends JFrame {
         JPanel infoBox = new JPanel();
         infoBox.setAlignmentX(1f);
         infoBox.setLayout(new BoxLayout(infoBox, BoxLayout.Y_AXIS));
-        infoBox.setPreferredSize(new Dimension(130,50));
+        infoBox.setPreferredSize(new Dimension(130, 50));
         map = new JLabel();
         highscore = new JLabel();
         infoBox.add(highscore);
@@ -171,7 +180,7 @@ public class Amazeing extends JFrame {
 
         /* Creating time label */
         time = new JLabel();
-        time.setPreferredSize(new Dimension(90,25));
+        time.setPreferredSize(new Dimension(90, 25));
 
         /* Adding infobox, time and buttonsbox into statusBar. */
         statusBar.add(Box.createRigidArea(new Dimension(5, 0)));
@@ -186,8 +195,8 @@ public class Amazeing extends JFrame {
         board = new Board();
         add(board, BorderLayout.CENTER);
 
-        setMinimumSize(new Dimension(400,500));
-        setSize(mazeSize+20, mazeSize+movebarHeight+70);
+        setMinimumSize(new Dimension(400, 500));
+        setSize(mazeSize + 20, mazeSize + movebarHeight + 70);
 
         setResizable(true);
         setTitle("Amazeing");
@@ -196,23 +205,39 @@ public class Amazeing extends JFrame {
     }
 
     /* The stopwatch to be used in the game. */
-    private void watch () {
+    private void watch() {
         Thread watch = new Thread(() -> {
             while (true) {
-                time.setText("Time:" + board.getTime());
+                time.setText("Aika: " + board.getTime());
             }
         });
         watch.start();
     }
 
-    private void updateUI () {
+    /* Updating the UI map and highscore texts. */
+    private void updateUI() {
         Thread update = new Thread(() -> {
             while (true) {
-                map.setText("Map: "+board.getMap());
-                highscore.setText("Highscore: "+board.getHighscore(board.getMap()));
+                map.setText("Kenttä: " + board.getMap());
+                highscore.setText("Ennätys: " + board.getHighscore(board.getMap()));
             }
         });
         update.start();
+    }
+
+    private void endGame() {
+        Thread end = new Thread(() -> {
+            while (true) {
+                boolean isGoalReached = board.getGoalReached();
+                //System.out.println("endGame(AMAZEING): isGoalReached = " + isGoalReached);
+                if (isGoalReached) {
+                    System.out.println("endGame(Amazeing): goalReached = "+ board.getGoalReached());
+                    board.setGoalReachedFalse();
+                    showEnd();
+                }
+            }
+        });
+        end.start();
     }
 
     /* -------------  Main  -------------------------------------- */
@@ -225,6 +250,7 @@ public class Amazeing extends JFrame {
         });
     }
 
+    /* Nested classes */
     private class SettingsDialog extends JDialog implements ItemListener {
         SettingsDialog(Frame parent) {
             super(parent);
@@ -232,7 +258,7 @@ public class Amazeing extends JFrame {
         }
 
         private void initSettingsDialog() {
-            setTitle("Settings");
+            setTitle("Asetukset");
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             setLocation(getParent().getLocation());
             setModalityType(ModalityType.APPLICATION_MODAL);
@@ -243,12 +269,12 @@ public class Amazeing extends JFrame {
                 dispose();
             });
 
-            JButton cancel = new JButton("Cancel");
+            JButton cancel = new JButton("Peruuta");
             btn.addActionListener(event -> {
                 dispose();
             });
 
-            JLabel color = new JLabel("Choose your balls color:");
+            JLabel color = new JLabel("Valitse pallosi väri:");
 
             ButtonGroup buttons = new ButtonGroup();
 
@@ -327,8 +353,8 @@ public class Amazeing extends JFrame {
             initMapDialog();
         }
 
-        private void initMapDialog(){
-            setTitle("Choosing the map");
+        private void initMapDialog() {
+            setTitle("Kentän valinta");
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             setLocation(getParent().getLocation());
             setModalityType(ModalityType.APPLICATION_MODAL);
@@ -339,19 +365,17 @@ public class Amazeing extends JFrame {
                 dispose();
             });
 
-            JButton cancel = new JButton("Cancel");
-            cancel.addActionListener(event -> {
-                dispose();
-            });
+            JButton cancel = new JButton("Peruuta");
+            cancel.addActionListener(event -> dispose());
 
-            JLabel map = new JLabel("Choose a map to play:");
+            JLabel map = new JLabel("Valitse kenttä jota pelata:");
 
             ButtonGroup buttons = new ButtonGroup();
 
-            JRadioButton rb1 = new JRadioButton("Map 1", true);
-            JRadioButton rb2 = new JRadioButton("Map 2");
-            JRadioButton rb3 = new JRadioButton("Map 3");
-            JRadioButton rb4 = new JRadioButton("Map 4");
+            JRadioButton rb1 = new JRadioButton("Kenttä 1", true);
+            JRadioButton rb2 = new JRadioButton("Kenttä 2");
+            JRadioButton rb3 = new JRadioButton("Kenttä 3");
+            JRadioButton rb4 = new JRadioButton("Kenttä 4");
 
             buttons.add(rb1);
             buttons.add(rb2);
@@ -363,7 +387,7 @@ public class Amazeing extends JFrame {
             rb3.addItemListener(this);
             rb4.addItemListener(this);
 
-            setMinimumSize(new Dimension(200,230));
+            setMinimumSize(new Dimension(200, 230));
             setSize(350, 300);
 
             createLayout(map, rb1, rb2, rb3, rb4, okBtn, cancel);
@@ -374,7 +398,7 @@ public class Amazeing extends JFrame {
             int selection = e.getStateChange();
             if (selection == ItemEvent.SELECTED) {
                 JRadioButton button = (JRadioButton) e.getSource();
-                chosenMap = Integer.parseInt(button.getText().substring(4, 5));
+                chosenMap = Integer.parseInt(button.getText().substring(7, 8));
             }
         }
 
@@ -421,7 +445,7 @@ public class Amazeing extends JFrame {
         }
 
         private void initHelpDialog() {
-            setTitle("Instructions");
+            setTitle("Ohjeet");
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             setLocation(getParent().getLocation());
             setModalityType(ModalityType.APPLICATION_MODAL);
@@ -464,7 +488,7 @@ public class Amazeing extends JFrame {
         }
 
         private void initSolutionDialog() {
-            setTitle("Solution");
+            setTitle("Ratkaisu");
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             setLocation(getParent().getLocation());
             setModalityType(ModalityType.APPLICATION_MODAL);
@@ -475,7 +499,7 @@ public class Amazeing extends JFrame {
 
             /* Get the correct solution picture */
             //String fileName = "src/resources/solution"+board.getMap()+".png";
-            ImageIcon solutionPic = new ImageIcon("src/resources/solution"+board.getMap()+".png");
+            ImageIcon solutionPic = new ImageIcon("src/resources/solution" + board.getMap() + ".png");
 
             JLabel solution = new JLabel(solutionPic);
 
@@ -512,7 +536,7 @@ public class Amazeing extends JFrame {
         }
 
         private void initScoresDialog() {
-            setTitle("Highscores");
+            setTitle("Ennätykset");
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             setLocation(getParent().getLocation());
             setModalityType(ModalityType.APPLICATION_MODAL);
@@ -520,26 +544,44 @@ public class Amazeing extends JFrame {
             JButton btn = new JButton("OK");
             btn.addActionListener(event -> dispose());
 
-            setMinimumSize(new Dimension(200,200));
-            setSize(250,350);
+            setMinimumSize(new Dimension(200, 200));
+            setSize(250, 350);
 
             JPanel scores = new JPanel();
             scores.setAlignmentX(1f);
             scores.setLayout(new BoxLayout(scores, BoxLayout.Y_AXIS));
-            scores.setPreferredSize(new Dimension(130,50));
+            scores.setPreferredSize(new Dimension(130, 50));
 
-            JLabel score1 = new JLabel("Map 1 highscore: "+board.getHighscore(1));
-            JLabel score2 = new JLabel("Map 2 highscore: "+board.getHighscore(2));
-            JLabel score3 = new JLabel("Map 3 highscore: "+board.getHighscore(3));
-            JLabel score4 = new JLabel("Map 4 highscore: "+board.getHighscore(4));
+            JLabel score1 = new JLabel("Kentän 1 ennätys: " + board.getHighscore(1));
+            JLabel score2 = new JLabel("Kentän 2 ennätys: " + board.getHighscore(2));
+            JLabel score3 = new JLabel("Kentän 3 ennätys: " + board.getHighscore(3));
+            JLabel score4 = new JLabel("Kentän 4 ennätys: " + board.getHighscore(4));
 
-            scores.add(Box.createRigidArea(new Dimension(5,5)));
+            scores.add(Box.createRigidArea(new Dimension(5, 5)));
             scores.add(score1);
             scores.add(score2);
             scores.add(score3);
             scores.add(score4);
 
             add(scores);
+        }
+    }
+
+    private class EndDialog extends JDialog {
+        EndDialog(Frame parent) {
+            super(parent);
+            initEndDialog();
+        }
+
+        private void initEndDialog() {
+            System.out.println("initEndDialog(): initializing the window.");
+            setTitle("Kenttä läpi!");
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setLocation(getParent().getLocation());
+            setModalityType(ModalityType.APPLICATION_MODAL);
+
+            setSize(150,200);
+
         }
     }
 }
