@@ -133,7 +133,7 @@ public class Board extends JPanel implements ActionListener {
         if (paused) {
             g.drawImage(pause,0,100,this);
             timer.stop();
-            System.out.println("Drawing 'Paused'");
+            //System.out.println("Drawing 'Paused'");
         }
         else {
             g.drawImage(instructions,0,0,this);
@@ -144,7 +144,7 @@ public class Board extends JPanel implements ActionListener {
     private void endGame() {
         inGame = false;
         goalReached = true;
-        System.out.println("endGame(Board): setting inGame to false.");
+        //System.out.println("endGame(Board): setting inGame to false.");
         if ( highscore[getMap()-1] == 0.0 ) {
             highscore[getMap()-1] = getTime();
         }
@@ -154,7 +154,7 @@ public class Board extends JPanel implements ActionListener {
 
         if (watch.isStarted()) {
             watch.stop();
-            System.out.format("endGame(Board): watch.isStarted() is true so stopping watch.\n");
+            //System.out.format("endGame(Board): watch.isStarted() is true so stopping watch.\n");
         }
     }
 
@@ -231,12 +231,12 @@ public class Board extends JPanel implements ActionListener {
                     }
                 }
             } else {
-                System.out.format("keyPressed: Setting inGame to True. Watch.isStarted = false");
+                //System.out.format("keyPressed: Setting inGame to True. Watch.isStarted = false");
                 inGame = true;
                 if (!watch.isStarted()) {
                     watch.reset();
                     watch.start();
-                    System.out.print(", starting the Watch.\n");
+                    //System.out.print(", starting the Watch.\n");
                     initVariables(getMap(), ball.getColor(), true);
                 }
             }

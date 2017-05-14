@@ -11,7 +11,7 @@ import static javax.swing.LayoutStyle.ComponentPlacement.RELATED;
 
 public class Amazeing extends JFrame {
 
-    private int movebarHeight = 70;
+    private int movebarHeight = 50;
     private int mazeSize = 25 * 16;
     private Board board;
     private JLabel time;
@@ -135,14 +135,14 @@ public class Amazeing extends JFrame {
 //        buttonsBox.add(right, gbc);
 
         /* Adding best time and current lvl into the statusBar. */
-        JPanel infoBox = new JPanel();
-        infoBox.setAlignmentX(1f);
-        infoBox.setLayout(new BoxLayout(infoBox, BoxLayout.Y_AXIS));
-        infoBox.setPreferredSize(new Dimension(130, 50));
+//        JPanel infoBox = new JPanel();
+//        infoBox.setAlignmentX(1f);
+//        infoBox.setLayout(new BoxLayout(infoBox, BoxLayout.Y_AXIS));
+//        infoBox.setPreferredSize(new Dimension(130, 50));
         map = new JLabel();
         highscore = new JLabel();
-        infoBox.add(highscore);
-        infoBox.add(map);
+//        infoBox.add(highscore);
+//        infoBox.add(map);
 
 
         /* Creating time label */
@@ -151,7 +151,10 @@ public class Amazeing extends JFrame {
 
         /* Adding infobox, time and buttonsbox into statusBar. */
         statusBar.add(Box.createRigidArea(new Dimension(5, 0)));
-        statusBar.add(infoBox);
+//        statusBar.add(infoBox);
+        statusBar.add(map);
+        statusBar.add(Box.createRigidArea(new Dimension(30, 0)));
+        statusBar.add(highscore);
         statusBar.add(Box.createRigidArea(new Dimension(150, 0)));
         statusBar.add(time);
         //statusBar.add(buttonsBox);
@@ -248,7 +251,7 @@ public class Amazeing extends JFrame {
         private void initSettingsDialog() {
             setTitle("Asetukset");
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            setLocation(getParent().getLocation());
+            setLocation(getParent().getX(), getParent().getY()+50);
             setModalityType(ModalityType.APPLICATION_MODAL);
 
             /* OK Button, when pressed disposes of the settings dialog and initializes board with the chosen ball color*/
@@ -354,7 +357,7 @@ public class Amazeing extends JFrame {
         private void initMapDialog() {
             setTitle("Kentän valinta");
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            setLocation(getParent().getLocation());
+            setLocation(getParent().getX(), getParent().getY()+50);
             setModalityType(ModalityType.APPLICATION_MODAL);
 
             /* OK Button, when pressed calls initVariables with the chosen map. */
@@ -523,8 +526,8 @@ public class Amazeing extends JFrame {
             GroupLayout gl = new GroupLayout(pane);
             pane.setLayout(gl);
 
-            gl.setAutoCreateContainerGaps(true);
-            gl.setAutoCreateGaps(true);
+//            gl.setAutoCreateContainerGaps(true);
+//            gl.setAutoCreateGaps(true);
 
             gl.setHorizontalGroup(gl.createParallelGroup(CENTER)
                     .addComponent(pic)
@@ -533,9 +536,8 @@ public class Amazeing extends JFrame {
 
             gl.setVerticalGroup(gl.createSequentialGroup()
                     .addComponent(pic)
-                    .addGap(20)
+//                    .addGap(20)
                     .addComponent(btn)
-                    .addGap(20)
             );
             pack();
         }
@@ -552,15 +554,16 @@ public class Amazeing extends JFrame {
         private void initScoresDialog() {
             setTitle("Ennätykset");
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            setLocation(getParent().getLocation());
+            setMinimumSize(new Dimension(100, 180));
+            setSize(150, 200);
+            setLocation(getParent().getX(), getParent().getY()+50);
             setModalityType(ModalityType.APPLICATION_MODAL);
 
             /* OK Button. */
             JButton btn = new JButton("OK");
             btn.addActionListener(event -> dispose());
 
-            setMinimumSize(new Dimension(100, 180));
-            setSize(150, 200);
+
 
             /* Create a JPanel to store all the highscores. */
             JPanel scores = new JPanel();
@@ -603,8 +606,9 @@ public class Amazeing extends JFrame {
         private void initEndDialog() {
             System.out.println("initEndDialog(): initializing the window.");
             setTitle("Kenttä läpi!");
+            setSize(150,200);
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            setLocation(getParent().getLocation());
+            setLocation(getParent().getX()+this.getWidth()/2, getParent().getY()+mazeSize/2);
             setModalityType(ModalityType.APPLICATION_MODAL);
 
             /* Create buttons for next map and choosing a map. Then create a JLabel for showing the time. */
@@ -612,7 +616,7 @@ public class Amazeing extends JFrame {
             JButton newMap = new JButton("Kentän valinta");
             JLabel time = new JLabel("Aikasi: " + board.getTime());
 
-            setSize(150,200);
+
 
             /* call createLayout with the components created. */
             createLayout(time, newMap, next);
